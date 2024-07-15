@@ -21,7 +21,10 @@
             <groupId>com.think.oms</groupId>
             <artifactId>think-oms-application</artifactId>
         </dependency>
-
+        <dependency>
+            <groupId>com.think.oms</groupId>
+            <artifactId>think-oms-infrastructure</artifactId>
+        </dependency>
     </dependencies>
 
 </project>

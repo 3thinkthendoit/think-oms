@@ -6,10 +6,6 @@ import lombok.Getter;
 @Getter
 public class OrderId {
 
-    /**
-     * 订单ID
-     */
-    private Long orderId;
 
     /**
      * 订单号
@@ -37,5 +33,6 @@ public class OrderId {
     public OrderId(String orderNo){
         this.orderNo = orderNo;
     }
+
 
 }

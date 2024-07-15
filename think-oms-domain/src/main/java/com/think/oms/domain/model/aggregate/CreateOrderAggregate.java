@@ -21,7 +21,7 @@ import java.util.Objects;
  * 订单聚合
  */
 @Getter
-public class OrderAggregate {
+public class CreateOrderAggregate {
 
     /**
      * 订单ID
@@ -78,22 +78,23 @@ public class OrderAggregate {
 
 
 
-    public static OrderAggregate create(CreateOrderCommand command){
+    public static CreateOrderAggregate create(CreateOrderCommand command){
         command.validate();
-        OrderAggregate aggregate = new OrderAggregate();
+        CreateOrderAggregate aggregate = new CreateOrderAggregate();
         baseCreate(aggregate,command);
         return  aggregate;
     }
 
-    public static OrderAggregate create(CreateOrderCommand command,List<OrderSkuItem> skuItems){
+
+    public static CreateOrderAggregate create(CreateOrderCommand command, List<OrderSkuItem> skuItems){
         command.validate();
-        OrderAggregate aggregate = new OrderAggregate();
+        CreateOrderAggregate aggregate = new CreateOrderAggregate();
         baseCreate(aggregate,command);
         aggregate.skuItems = skuItems;
         return  aggregate;
     }
 
-    private static void baseCreate(OrderAggregate aggregate,CreateOrderCommand command){
+    private static void baseCreate(CreateOrderAggregate aggregate, CreateOrderCommand command){
         aggregate.orderId = new OrderId(command.getExternalOrderNo(),command.getOrderSource());
         aggregate.orderPrice = command.getOrderPrice();
         aggregate.orderTitle = command.getOrderTitle();

@@ -2,7 +2,7 @@ package com.think.oms.domain.service;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import com.think.oms.domain.model.aggregate.OrderAggregate;
+import com.think.oms.domain.model.aggregate.CreateOrderAggregate;
 import com.think.oms.domain.pl.SkuInfo;
 import com.think.oms.domain.pl.request.OrderQueryRequest;
 import com.think.oms.domain.pl.request.SkuInfoQueryRequest;
@@ -14,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
-
 import java.util.List;
 import java.util.Map;
 
@@ -34,7 +33,7 @@ public class OrderDomainService {
      * @param aggregate
      * @return
      */
-    public void isExist(OrderAggregate aggregate){
+    public void isExist(CreateOrderAggregate aggregate){
         OrderQueryRequest request = OrderQueryRequest.builder()
                 .externalOrderNo(aggregate.getOrderId().getExternalOrderNo())
                 .orderSource(aggregate.getOrderId().getOrderSource())
@@ -47,13 +46,13 @@ public class OrderDomainService {
      * 领域方法(高内聚低耦合)
      * @param aggregate
      */
-    public void initBaseInfo(OrderAggregate aggregate){
+    public void initBaseInfo(CreateOrderAggregate aggregate){
         this.initSkuInfo(aggregate);
         this.initInvoiceInfo(aggregate);
         //完善其他信息
     }
 
-    private void  initSkuInfo(OrderAggregate aggregate){
+    private void  initSkuInfo(CreateOrderAggregate aggregate){
         List<String> externalSkuIds = Lists.newArrayList();
         aggregate.getSkuInfos().forEach(orderSku -> {externalSkuIds.add(orderSku.getExternalSkuId());});
         //查询商品信息
@@ -67,7 +66,7 @@ public class OrderDomainService {
         aggregate.modifyOrderSku(skuInfoMap);
     }
 
-    private void  initInvoiceInfo(OrderAggregate aggregate){
+    private void  initInvoiceInfo(CreateOrderAggregate aggregate){
         //查询发票域 完善发票信息 参考 isExist 调用发票南向网关
         aggregate.getInvoiceInfo().modify();
     }

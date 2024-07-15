@@ -4,7 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.google.common.collect.Lists;
-import com.think.oms.domain.model.aggregate.OrderAggregate;
+import com.think.oms.domain.model.aggregate.CreateOrderAggregate;
 import com.think.oms.domain.model.dp.OrderId;
 import com.think.oms.domain.port.repository.OrderRepository;
 import com.think.oms.infrastructure.acl.pl.OrderPLUtil;
@@ -38,7 +38,7 @@ public class OrderRepositoryImpl implements OrderRepository {
      * @param aggregate
      */
     @Transactional(rollbackFor = Exception.class)
-    public void save(OrderAggregate aggregate){
+    public void save(CreateOrderAggregate aggregate){
         OrderBaseInfo orderBaseInfo = OrderPLUtil.plToOrderPo(aggregate);
         List<OrderSkuInfo> orderSkuInfoList = OrderPLUtil.plToOrderSkuPo(aggregate);
         List<OrderSkuItemInfo> orderSkuItemInfoList = OrderPLUtil.plToOrderSkuItemPo(aggregate);
@@ -55,7 +55,7 @@ public class OrderRepositoryImpl implements OrderRepository {
      * @return
      */
     @Override
-    public OrderAggregate ofByOrderId(OrderId orderId) {
+    public CreateOrderAggregate ofByOrderId(OrderId orderId) {
         LambdaQueryWrapper<OrderBaseInfo> queryWrapper = Wrappers.lambdaQuery();
         queryWrapper.eq(OrderBaseInfo::getOrderNo,orderId.getOrderNo());
         List<OrderBaseInfo> orderList =  orderInfoMapper.selectList(queryWrapper);
@@ -65,6 +65,11 @@ public class OrderRepositoryImpl implements OrderRepository {
         //按业务需要查询orderSkuItem
         List<OrderSkuItemInfo> orderSkuItemInfoList = Lists.newArrayList();
         return OrderPLUtil.plToOrderDo(orderList.get(0),orderSkuInfoList,orderSkuItemInfoList);
+    }
+
+    @Override
+    public void update(CreateOrderAggregate aggregate) {
+
     }
 
 }

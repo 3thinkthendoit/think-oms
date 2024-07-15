@@ -26,6 +26,7 @@
         <druid.version>1.1.10</druid.version>
         <fastjosn.verison>1.2.78</fastjosn.verison>
         <okhttp.version>4.9.1</okhttp.version>
+        <rocketmq.veriosn>2.2.0</rocketmq.veriosn>
     </properties>
     <dependencies>
         <dependency>
@@ -105,6 +106,11 @@
                 <groupId>com.squareup.okhttp3</groupId>
                 <artifactId>okhttp</artifactId>
                 <version>${okhttp.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.rocketmq</groupId>
+                <artifactId>rocketmq-spring-boot-starter</artifactId>
+                <version>${rocketmq.veriosn}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

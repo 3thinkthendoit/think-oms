@@ -2,7 +2,7 @@ package com.think.oms.infrastructure.acl.pl;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import com.think.oms.domain.model.aggregate.OrderAggregate;
+import com.think.oms.domain.model.aggregate.CreateOrderAggregate;
 import com.think.oms.domain.model.constant.FeeType;
 import com.think.oms.domain.model.valueobject.OrderSkuItem;
 import com.think.oms.domain.pl.command.CreateOrderCommand;
@@ -23,7 +23,7 @@ public class OrderPLUtil {
      * @param aggregate
      * @return
      */
-    public static OrderBaseInfo plToOrderPo(OrderAggregate aggregate){
+    public static OrderBaseInfo plToOrderPo(CreateOrderAggregate aggregate){
         OrderBaseInfo order =  OrderBaseInfo.builder()
                 .createTime(new Date())
                 .updateTime(new Date())
@@ -35,7 +35,7 @@ public class OrderPLUtil {
         return order;
     }
 
-    public static List<OrderSkuInfo> plToOrderSkuPo(OrderAggregate aggregate){
+    public static List<OrderSkuInfo> plToOrderSkuPo(CreateOrderAggregate aggregate){
         List<OrderSkuInfo> list = Lists.newArrayList();
         aggregate.getSkuInfos().forEach(skuInfo -> {
             OrderSkuInfo orderSku = OrderSkuInfo.builder()
@@ -45,7 +45,7 @@ public class OrderPLUtil {
         return list;
     }
 
-    public static List<OrderSkuItemInfo> plToOrderSkuItemPo(OrderAggregate aggregate){
+    public static List<OrderSkuItemInfo> plToOrderSkuItemPo(CreateOrderAggregate aggregate){
         List<OrderSkuItemInfo> list = Lists.newArrayList();
         aggregate.getSkuInfos().forEach(skuInfo -> {
             OrderSkuItemInfo orderSkuItem = OrderSkuItemInfo.builder()
@@ -55,7 +55,7 @@ public class OrderPLUtil {
         return list;
     }
 
-    public static OrderAggregate  plToOrderDo(OrderBaseInfo orderBaseInfo,List<OrderSkuInfo> orderSkuInfos,List<OrderSkuItemInfo> skuItemInfos){
+    public static CreateOrderAggregate plToOrderDo(OrderBaseInfo orderBaseInfo, List<OrderSkuInfo> orderSkuInfos, List<OrderSkuItemInfo> skuItemInfos){
         CreateOrderCommand command = CreateOrderCommand.builder()
                 .orderPrice(orderBaseInfo.getOrderPrice())
                 .orderTitle(orderBaseInfo.getOrderTitle())
@@ -68,6 +68,6 @@ public class OrderPLUtil {
 
             skuItems.add(new OrderSkuItem(item.getSkuId(),item.getSkuCode(),item.getSkuAmount(),item.getPayPrice(),feeAmountInfos));
         });
-        return OrderAggregate.create(command,skuItems);
+        return CreateOrderAggregate.create(command,skuItems);
     }
 }

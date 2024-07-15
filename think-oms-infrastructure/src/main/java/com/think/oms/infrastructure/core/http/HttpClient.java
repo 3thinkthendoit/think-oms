@@ -1,6 +1,6 @@
 package com.think.oms.infrastructure.core.http;
 
-import com.squareup.okhttp.OkHttpClient;
+import okhttp3.OkHttpClient;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Component;
@@ -17,8 +17,6 @@ public class HttpClient implements InitializingBean, DisposableBean {
     @Override
     public void afterPropertiesSet() throws Exception {
         client = new OkHttpClient();
-        client.setConnectTimeout(30L, TimeUnit.SECONDS);
-        client.setReadTimeout(30L, TimeUnit.SECONDS);
     }
 
     @Override
