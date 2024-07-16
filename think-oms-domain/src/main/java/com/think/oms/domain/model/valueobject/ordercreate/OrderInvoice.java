@@ -1,4 +1,4 @@
-package com.think.oms.domain.model.valueobject;
+package com.think.oms.domain.model.valueobject.ordercreate;
 
 import lombok.Getter;
 

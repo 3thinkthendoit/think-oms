@@ -1,7 +1,7 @@
 package com.think.oms.osh.listener;
 
 import com.think.oms.app.service.OrderAppService;
-import com.think.oms.domain.pl.event.OrderCreatedEvent;
+import com.think.oms.domain.pl.event.OrderUpdatedEvent;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.EventListener;
@@ -13,15 +13,15 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @Slf4j
-public class OrderCreatedListener  {
+public class OrderUpdatedListener {
 
     @Autowired
     OrderAppService orderAppService;
 
-    @EventListener(value = OrderCreatedEvent.class)
+    @EventListener(value = OrderUpdatedEvent.class)
     @Async
-    public void onApplicationEvent(OrderCreatedEvent event) {
-        log.info("收到OrderCreatedEvent :orderNo=[{}]",event.getOrderNo());
-        orderAppService.doHandleAfterOrderBeCreated(event.getOrderNo());
+    public void onApplicationEvent(OrderUpdatedEvent event) {
+        log.info("OrderFulfilledEvent :orderNo=[{}]",event.getOrderNo());
+        orderAppService.shipmentCallBack(event.getOrderNo());
     }
 }

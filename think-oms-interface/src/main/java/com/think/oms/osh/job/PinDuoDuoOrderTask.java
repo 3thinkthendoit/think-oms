@@ -1,7 +1,7 @@
 package com.think.oms.osh.job;
 
 import com.think.oms.app.service.OrderAppService;
-import com.think.oms.domain.pl.command.CreateOrderCommand;
+import com.think.oms.domain.pl.command.OrderCreateCommand;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -18,7 +18,7 @@ public class PinDuoDuoOrderTask {
     @Scheduled(fixedRate = 1000L*60*5)
     public void pullOrder() {
         //调用pdd api接口 拉取订单 转成 CreateOrderCommand
-        CreateOrderCommand command = CreateOrderCommand.builder()
+        OrderCreateCommand command = OrderCreateCommand.builder()
                 .build();
         orderAppService.createOrder(command);
     }

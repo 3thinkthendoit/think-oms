@@ -1,16 +1,16 @@
-package com.think.oms.domain.model.aggregate;
+package com.think.oms.domain.model.aggregate.createorder;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.think.oms.domain.model.constant.FeeType;
 import com.think.oms.domain.model.constant.OrderStatus;
 import com.think.oms.domain.model.dp.OrderId;
-import com.think.oms.domain.model.valueobject.OrderInvoice;
+import com.think.oms.domain.model.valueobject.ordercreate.OrderInvoice;
 import com.think.oms.domain.model.valueobject.OrderSku;
 import com.think.oms.domain.model.valueobject.OrderSkuItem;
-import com.think.oms.domain.model.valueobject.OrderUser;
+import com.think.oms.domain.model.valueobject.ordercreate.OrderUser;
 import com.think.oms.domain.pl.SkuInfo;
-import com.think.oms.domain.pl.command.CreateOrderCommand;
+import com.think.oms.domain.pl.command.OrderCreateCommand;
 import lombok.Getter;
 import org.springframework.util.Assert;
 import java.util.List;
@@ -21,7 +21,7 @@ import java.util.Objects;
  * 订单聚合
  */
 @Getter
-public class CreateOrderAggregate {
+public class OrderCreateAggregate {
 
     /**
      * 订单ID
@@ -78,23 +78,23 @@ public class CreateOrderAggregate {
 
 
 
-    public static CreateOrderAggregate create(CreateOrderCommand command){
+    public static OrderCreateAggregate create(OrderCreateCommand command){
         command.validate();
-        CreateOrderAggregate aggregate = new CreateOrderAggregate();
+        OrderCreateAggregate aggregate = new OrderCreateAggregate();
         baseCreate(aggregate,command);
         return  aggregate;
     }
 
 
-    public static CreateOrderAggregate create(CreateOrderCommand command, List<OrderSkuItem> skuItems){
+    public static OrderCreateAggregate create(OrderCreateCommand command, List<OrderSkuItem> skuItems){
         command.validate();
-        CreateOrderAggregate aggregate = new CreateOrderAggregate();
+        OrderCreateAggregate aggregate = new OrderCreateAggregate();
         baseCreate(aggregate,command);
         aggregate.skuItems = skuItems;
         return  aggregate;
     }
 
-    private static void baseCreate(CreateOrderAggregate aggregate, CreateOrderCommand command){
+    private static void baseCreate(OrderCreateAggregate aggregate, OrderCreateCommand command){
         aggregate.orderId = new OrderId(command.getExternalOrderNo(),command.getOrderSource());
         aggregate.orderPrice = command.getOrderPrice();
         aggregate.orderTitle = command.getOrderTitle();

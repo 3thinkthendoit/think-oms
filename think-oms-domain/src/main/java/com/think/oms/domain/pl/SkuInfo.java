@@ -2,7 +2,6 @@ package com.think.oms.domain.pl;
 
 import com.think.oms.domain.model.constant.SkuType;
 import lombok.Data;
-
 import java.util.List;
 
 @Data
@@ -14,7 +13,9 @@ public class SkuInfo {
 
     private String skuId;
 
-
+    /**
+     * 外部skuId
+     */
     private String externalSkuId;
 
     /**
@@ -22,7 +23,9 @@ public class SkuInfo {
      */
     private String skuCode;
 
-
+    /**
+     * 外部skuCode
+     */
     private String externalSkuCode;
 
     /**

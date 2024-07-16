@@ -2,6 +2,7 @@ package com.think.oms.domain.model.dp;
 
 import com.think.oms.domain.model.constant.OrderSource;
 import lombok.Getter;
+import org.springframework.util.Assert;
 
 @Getter
 public class OrderId {
@@ -25,6 +26,7 @@ public class OrderId {
 
 
     public OrderId(String externalOrderNo,OrderSource orderSource){
+
         this.externalOrderNo = externalOrderNo;
         this.orderSource = orderSource;
         this.orderNo = System.currentTimeMillis()+"";

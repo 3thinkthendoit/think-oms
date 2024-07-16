@@ -10,10 +10,12 @@ import com.think.oms.infrastructure.core.http.HttpClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
-
 import java.util.List;
 import java.util.Map;
 
+/**
+ * 商品信息南向网关
+ */
 @Component
 public class SkuInfoQueryGatewayImpl implements SkuInfoQueryGateway {
 

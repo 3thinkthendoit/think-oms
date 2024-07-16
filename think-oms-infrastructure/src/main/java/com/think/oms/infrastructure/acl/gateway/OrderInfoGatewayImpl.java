@@ -6,7 +6,7 @@ import com.google.common.collect.Lists;
 import com.think.oms.domain.pl.OrderInfo;
 import com.think.oms.domain.pl.request.OrderQueryRequest;
 import com.think.oms.domain.pl.response.OrderQueryResponse;
-import com.think.oms.domain.port.gateway.OrderQueryGateway;
+import com.think.oms.domain.port.gateway.OrderInfoGateway;
 import com.think.oms.infrastructure.core.mybatis.mapper.OrderInfoMapper;
 import com.think.oms.infrastructure.core.mybatis.po.OrderBaseInfo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +18,7 @@ import java.util.List;
  * 订单南向网关
  */
 @Component
-public class OrderQueryGatewayImpl implements OrderQueryGateway {
+public class OrderInfoGatewayImpl implements OrderInfoGateway {
 
     @Autowired
     OrderInfoMapper orderInfoMapper;

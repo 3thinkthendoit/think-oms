@@ -2,7 +2,7 @@ package com.think.oms.osh.controller;
 
 import com.google.common.collect.Maps;
 import com.think.oms.app.service.OrderAppService;
-import com.think.oms.domain.pl.command.CreateOrderCommand;
+import com.think.oms.domain.pl.command.OrderCreateCommand;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,7 +27,7 @@ public class MiJiaController {
     @RequestMapping("/create")
     public Map<String,Object> create(@RequestBody Map<String,Object> body){
         //解析米家协议 转成 CreateOrderCommand
-        CreateOrderCommand command = CreateOrderCommand.builder()
+        OrderCreateCommand command = OrderCreateCommand.builder()
                 .build();
         orderAppService.createOrder(command);
         return Maps.newHashMap();

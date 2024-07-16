@@ -5,9 +5,9 @@ import lombok.Data;
 
 @Data
 @Builder
-public class SkuShippingCommand {
+public class OrderFulfillmentCommand {
 
     private String orderNo;
 
-    private String wmsOrderNo;
+    private String ofcOrderNo;
 }

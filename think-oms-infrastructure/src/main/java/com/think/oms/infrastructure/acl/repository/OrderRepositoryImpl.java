@@ -4,7 +4,9 @@ import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.google.common.collect.Lists;
-import com.think.oms.domain.model.aggregate.CreateOrderAggregate;
+import com.think.oms.domain.model.aggregate.createorder.OrderCreateAggregate;
+import com.think.oms.domain.model.aggregate.fulfillment.OrderFulfillAggregate;
+import com.think.oms.domain.model.aggregate.shippment.ShippingAggregate;
 import com.think.oms.domain.model.dp.OrderId;
 import com.think.oms.domain.port.repository.OrderRepository;
 import com.think.oms.infrastructure.acl.pl.OrderPLUtil;
@@ -34,11 +36,11 @@ public class OrderRepositoryImpl implements OrderRepository {
     OrderSkuItemInfoMapper orderSkuItemInfoMapper;
 
     /**
-     * 持久化订单聚合根
+     * 持久化订单创建聚合
      * @param aggregate
      */
     @Transactional(rollbackFor = Exception.class)
-    public void save(CreateOrderAggregate aggregate){
+    public void save(OrderCreateAggregate aggregate){
         OrderBaseInfo orderBaseInfo = OrderPLUtil.plToOrderPo(aggregate);
         List<OrderSkuInfo> orderSkuInfoList = OrderPLUtil.plToOrderSkuPo(aggregate);
         List<OrderSkuItemInfo> orderSkuItemInfoList = OrderPLUtil.plToOrderSkuItemPo(aggregate);
@@ -50,12 +52,12 @@ public class OrderRepositoryImpl implements OrderRepository {
     }
 
     /**
-     * 还原聚合根
+     * 还原订单聚合根
      * @param orderId
      * @return
      */
     @Override
-    public CreateOrderAggregate ofByOrderId(OrderId orderId) {
+    public OrderCreateAggregate ofByOrderId(OrderId orderId) {
         LambdaQueryWrapper<OrderBaseInfo> queryWrapper = Wrappers.lambdaQuery();
         queryWrapper.eq(OrderBaseInfo::getOrderNo,orderId.getOrderNo());
         List<OrderBaseInfo> orderList =  orderInfoMapper.selectList(queryWrapper);
@@ -67,8 +69,21 @@ public class OrderRepositoryImpl implements OrderRepository {
         return OrderPLUtil.plToOrderDo(orderList.get(0),orderSkuInfoList,orderSkuItemInfoList);
     }
 
+    /**
+     * 更新订单履约聚合
+     * @param aggregate
+     */
     @Override
-    public void update(CreateOrderAggregate aggregate) {
+    @Transactional(rollbackFor = Exception.class)
+    public void update(OrderFulfillAggregate aggregate) {
+
+        //更新主订单信息
+
+        //更新sku发货信息
+    }
+
+    @Override
+    public void update(ShippingAggregate aggregate) {
 
     }
 

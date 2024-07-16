@@ -13,7 +13,13 @@ public class OrderSkuItem {
     private String skuId;
 
     @Getter
+    private String externalSkuId;
+
+    @Getter
     private String skuCode;
+
+    @Getter
+    private String externalSkuCode;
 
     @Getter
     private Integer skuAmount;

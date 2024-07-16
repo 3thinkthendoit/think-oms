@@ -3,7 +3,7 @@ package com.think.oms.domain.port.gateway;
 import com.think.oms.domain.pl.request.OrderQueryRequest;
 import com.think.oms.domain.pl.response.OrderQueryResponse;
 
-public interface OrderQueryGateway {
+public interface OrderInfoGateway {
 
     /**
      * 查询订单

@@ -2,7 +2,7 @@ package com.think.oms.domain.pl.command;
 
 import com.think.oms.domain.model.constant.OrderSource;
 import com.think.oms.domain.model.constant.OrderStatus;
-import com.think.oms.domain.model.valueobject.OrderUser;
+import com.think.oms.domain.model.valueobject.ordercreate.OrderUser;
 import com.think.oms.domain.pl.SkuInfo;
 import lombok.Builder;
 import lombok.Data;
@@ -16,7 +16,7 @@ import java.util.Map;
  */
 @Data
 @Builder
-public class CreateOrderCommand {
+public class OrderCreateCommand {
 
     /**
      * 订单号

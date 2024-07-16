@@ -13,6 +13,9 @@ public class OrderSku {
      */
     private String skuId;
 
+    /**
+     * 外部SKU ID
+     */
     private String externalSkuId;
 
     /**
@@ -20,6 +23,9 @@ public class OrderSku {
      */
     private String skuCode;
 
+    /**
+     * 外部skuCode
+     */
     private String externalSkuCode;
 
     /**
@@ -63,7 +69,7 @@ public class OrderSku {
     }
 
     /**
-     * 领域方法 不允许用set形式
+     * 领域方法
      * @param skuId
      * @param skuCode
      * @param skuPrice
