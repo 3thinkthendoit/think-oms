@@ -1,7 +1,7 @@
-package com.think.oms.domain.model.valueobject;
+package com.think.oms.domain.model.valueobject.create;
 
 import com.think.oms.domain.model.constant.SkuType;
-import com.think.oms.domain.pl.SkuInfo;
+import com.think.oms.domain.pl.SkuItemInfo;
 import lombok.Getter;
 import java.util.List;
 
@@ -59,7 +59,7 @@ public class OrderSku {
     private List<OrderSku> subSkuInfos;
 
 
-    public OrderSku(SkuInfo skuInfo, List<OrderSku> subSkuInfos){
+    public OrderSku(SkuItemInfo skuInfo, List<OrderSku> subSkuInfos){
         this.externalSkuCode = skuInfo.getExternalSkuCode();
         this.externalSkuId = skuInfo.getExternalSkuId();
         this.skuAmount = skuInfo.getSkuAmount();

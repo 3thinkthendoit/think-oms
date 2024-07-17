@@ -5,6 +5,8 @@ import com.think.oms.domain.model.constant.OrderStatus;
 import lombok.Builder;
 import lombok.Data;
 
+import java.util.List;
+
 @Data
 @Builder
 public class OrderInfo {
@@ -16,5 +18,7 @@ public class OrderInfo {
     private OrderSource orderSource;
 
     private OrderStatus orderStatus;
+
+    public List<SkuItemInfo> skuInfos;
 
 }

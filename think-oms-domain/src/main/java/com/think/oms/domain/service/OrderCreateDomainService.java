@@ -2,8 +2,8 @@ package com.think.oms.domain.service;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import com.think.oms.domain.model.aggregate.createorder.OrderCreateAggregate;
-import com.think.oms.domain.pl.SkuInfo;
+import com.think.oms.domain.model.aggregate.create.OrderCreateAggregate;
+import com.think.oms.domain.pl.SkuItemInfo;
 import com.think.oms.domain.pl.request.OrderQueryRequest;
 import com.think.oms.domain.pl.request.SkuInfoQueryRequest;
 import com.think.oms.domain.pl.response.OrderQueryResponse;
@@ -61,7 +61,7 @@ public class OrderCreateDomainService {
                 .build();
         SkuInfoQueryResponse response = skuInfoQueryGateway.query(request);
         //查询 sku基本信息
-        Map<String, SkuInfo> skuInfoMap = Maps.newHashMap();
+        Map<String, SkuItemInfo> skuInfoMap = Maps.newHashMap();
         response.getSkuInfos().forEach(sku->{skuInfoMap.put(sku.getExternalSkuId(),sku);});
         aggregate.modifyOrderSku(skuInfoMap);
     }

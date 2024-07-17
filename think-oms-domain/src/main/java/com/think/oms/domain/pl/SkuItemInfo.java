@@ -5,7 +5,7 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-public class SkuInfo {
+public class SkuItemInfo {
 
     /**
      * skuId
@@ -49,6 +49,21 @@ public class SkuInfo {
     private Integer skuAmount;
 
     /**
+     * 下单数量
+     */
+    private Integer shippingAmount;
+
+    /**
+     * 退货数量
+     */
+    private Integer returnAmount;
+
+    /**
+     * 签收数量
+     */
+    private Integer confirmAmount;
+
+    /**
      * Sku类型
      */
     private SkuType skuType;
@@ -56,5 +71,6 @@ public class SkuInfo {
     /**
      * 子商品信息
      */
-    private List<SkuInfo> subSkuList;
+    private List<SkuItemInfo> subSkuList;
+
 }

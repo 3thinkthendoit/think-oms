@@ -4,9 +4,8 @@ import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.google.common.collect.Lists;
-import com.think.oms.domain.model.aggregate.createorder.OrderCreateAggregate;
-import com.think.oms.domain.model.aggregate.fulfillment.OrderFulfillAggregate;
-import com.think.oms.domain.model.aggregate.shippment.ShippingAggregate;
+import com.think.oms.domain.model.aggregate.create.OrderCreateAggregate;
+import com.think.oms.domain.model.aggregate.fulfill.OrderFulfillAggregate;
 import com.think.oms.domain.model.dp.OrderId;
 import com.think.oms.domain.port.repository.OrderRepository;
 import com.think.oms.infrastructure.acl.pl.OrderPLUtil;
@@ -76,15 +75,11 @@ public class OrderRepositoryImpl implements OrderRepository {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void update(OrderFulfillAggregate aggregate) {
-
         //更新主订单信息
 
         //更新sku发货信息
-    }
 
-    @Override
-    public void update(ShippingAggregate aggregate) {
-
+        //新增发货回传记录
     }
 
 }

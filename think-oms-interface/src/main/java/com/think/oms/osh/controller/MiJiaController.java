@@ -21,7 +21,7 @@ public class MiJiaController {
     OrderAppService orderAppService;
 
     /**
-     * 接受米家订单
+     * 接受米家订单(小米主动推送)
      * @return
      */
     @RequestMapping("/create")
@@ -40,6 +40,8 @@ public class MiJiaController {
      */
     @RequestMapping("/query")
     public Map<String,Object> query(@RequestBody Map<String,Object> body){
+
+        //orderAppService.query()
 
         return Maps.newHashMap();
     }

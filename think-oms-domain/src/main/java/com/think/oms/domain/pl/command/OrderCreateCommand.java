@@ -2,8 +2,8 @@ package com.think.oms.domain.pl.command;
 
 import com.think.oms.domain.model.constant.OrderSource;
 import com.think.oms.domain.model.constant.OrderStatus;
-import com.think.oms.domain.model.valueobject.ordercreate.OrderUser;
-import com.think.oms.domain.pl.SkuInfo;
+import com.think.oms.domain.model.valueobject.create.OrderUser;
+import com.think.oms.domain.pl.SkuItemInfo;
 import lombok.Builder;
 import lombok.Data;
 import org.springframework.util.Assert;
@@ -46,7 +46,7 @@ public class OrderCreateCommand {
     /**
      * Sku下单信息
      */
-    private List<SkuInfo> skuInfoList;
+    private List<SkuItemInfo> skuInfoList;
 
     /**
      * 下单用户信息

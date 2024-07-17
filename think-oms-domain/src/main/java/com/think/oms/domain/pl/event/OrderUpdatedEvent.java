@@ -1,6 +1,6 @@
 package com.think.oms.domain.pl.event;
 
-import com.think.oms.domain.model.aggregate.fulfillment.OrderFulfillAggregate;
+import com.think.oms.domain.model.aggregate.fulfill.OrderFulfillAggregate;
 import lombok.Data;
 
 @Data

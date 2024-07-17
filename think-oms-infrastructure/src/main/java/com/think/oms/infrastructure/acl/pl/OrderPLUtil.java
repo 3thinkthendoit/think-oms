@@ -2,9 +2,9 @@ package com.think.oms.infrastructure.acl.pl;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import com.think.oms.domain.model.aggregate.createorder.OrderCreateAggregate;
+import com.think.oms.domain.model.aggregate.create.OrderCreateAggregate;
 import com.think.oms.domain.model.constant.FeeType;
-import com.think.oms.domain.model.valueobject.OrderSkuItem;
+import com.think.oms.domain.model.valueobject.create.OrderSkuItem;
 import com.think.oms.domain.pl.command.OrderCreateCommand;
 import com.think.oms.infrastructure.core.mybatis.po.OrderBaseInfo;
 import com.think.oms.infrastructure.core.mybatis.po.OrderSkuInfo;
@@ -66,7 +66,6 @@ public class OrderPLUtil {
         //skuItem po 转 domain
         skuItemInfos.forEach(item->{
             Map<FeeType,Long> feeAmountInfos = Maps.newHashMap();
-
             skuItems.add(new OrderSkuItem(item.getSkuId(),item.getSkuCode(),item.getSkuAmount(),item.getPayPrice(),feeAmountInfos));
         });
         return OrderCreateAggregate.create(command,skuItems);

@@ -1,11 +1,11 @@
-package com.think.oms.domain.pl.command;
+package com.think.oms.domain.pl.request;
 
 import lombok.Builder;
 import lombok.Data;
 
 @Data
 @Builder
-public class OrderFulfillmentCommand {
+public class OfcOrderQueryRequest {
 
     private String orderNo;
 

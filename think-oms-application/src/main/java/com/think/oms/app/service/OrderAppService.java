@@ -1,25 +1,29 @@
 package com.think.oms.app.service;
 
-import com.think.oms.domain.model.aggregate.createorder.OrderCreateAggregate;
-import com.think.oms.domain.model.aggregate.fulfillment.OrderFulfillAggregate;
-import com.think.oms.domain.model.aggregate.shippment.ShippingAggregate;
+import com.think.oms.domain.model.aggregate.create.OrderCreateAggregate;
+import com.think.oms.domain.model.aggregate.fulfill.OrderFulfillAggregate;
+import com.think.oms.domain.pl.OrderInfo;
+import com.think.oms.domain.pl.command.OrderAssCommand;
 import com.think.oms.domain.pl.command.OrderCreateCommand;
-import com.think.oms.domain.pl.command.OrderFulfillmentCommand;
+import com.think.oms.domain.pl.command.OrderFulfillCommand;
 import com.think.oms.domain.pl.event.OrderCreatedEvent;
 import com.think.oms.domain.pl.event.OrderUpdatedEvent;
+import com.think.oms.domain.pl.query.OrderInfoQuery;
+import com.think.oms.domain.pl.request.OrderQueryRequest;
 import com.think.oms.domain.port.gateway.InvoiceGateway;
 import com.think.oms.domain.port.gateway.OfcGateway;
+import com.think.oms.domain.port.gateway.OrderInfoGateway;
 import com.think.oms.domain.port.publisher.OrderEventPublisher;
 import com.think.oms.domain.port.repository.OrderRepository;
 import com.think.oms.domain.service.OrderCreateDomainService;
 import com.think.oms.domain.service.OrderFulfillDomainService;
-import com.think.oms.domain.service.ShippingDomainService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import java.util.List;
 
 /**
- * 订单服务APP层
+ * 订单服务APP层 CQRS 模式
  */
 @Slf4j
 @Service
@@ -38,7 +42,7 @@ public class OrderAppService {
     @Autowired
     InvoiceGateway invoiceGateway;
     @Autowired
-    ShippingDomainService shippingDomainService;
+    OrderInfoGateway orderInfoGateway;
 
     /**
      * 统一创建订单(流程编排-低耦合)
@@ -71,30 +75,38 @@ public class OrderAppService {
      * 订单发货逻辑处理
      * @param command
      */
-    public void orderFulfill(OrderFulfillmentCommand command){
+    public void orderFulfill(OrderFulfillCommand command){
         OrderFulfillAggregate aggregate = OrderFulfillAggregate.create(command);
         orderFulfillDomainService.initBaseInfo(aggregate);
         aggregate.check();
-        aggregate.fulfill();
+        orderFulfillDomainService.shippingCallback(aggregate);
         orderRepository.update(aggregate);
         orderEventPublisher.publish(new OrderUpdatedEvent(aggregate));
     }
 
+
     /**
-     * 三方平台发货回传
-     * @param orderNo
+     * 订单售后处理
+     * @param command
      */
-    public void shipmentCallBack(String orderNo){
-        ShippingAggregate aggregate = new ShippingAggregate(orderNo);
-        aggregate.filterShipping();
-        shippingDomainService.callback(aggregate);
-        orderRepository.update(aggregate);
+    public void orderAfterSaleService(OrderAssCommand command){
+
     }
 
-
-
-    public void orderAss(){
-
+    /**
+     * 查询订单信息
+     * 查询类query可以直接绕过dmmin层 调用南向网关
+     * @param query
+     * @return
+     */
+    public List<OrderInfo> query(OrderInfoQuery query){
+        OrderQueryRequest request = OrderQueryRequest
+                .builder()
+                .orderNo(query.getOrderNo())
+                //.orderSource()
+                //.externalOrderNo()
+                .build();
+        return orderInfoGateway.query(request).getOrders();
     }
 
 }

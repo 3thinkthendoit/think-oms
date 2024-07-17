@@ -22,6 +22,6 @@ public class OrderUpdatedListener {
     @Async
     public void onApplicationEvent(OrderUpdatedEvent event) {
         log.info("OrderFulfilledEvent :orderNo=[{}]",event.getOrderNo());
-        orderAppService.shipmentCallBack(event.getOrderNo());
+
     }
 }

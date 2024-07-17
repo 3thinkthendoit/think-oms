@@ -12,4 +12,6 @@ public class OrderQueryRequest {
 
     private OrderSource orderSource;
 
+    private String orderNo;
+
 }

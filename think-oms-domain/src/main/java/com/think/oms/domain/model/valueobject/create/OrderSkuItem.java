@@ -1,4 +1,4 @@
-package com.think.oms.domain.model.valueobject;
+package com.think.oms.domain.model.valueobject.create;
 
 
 import com.google.common.collect.Maps;

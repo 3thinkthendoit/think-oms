@@ -1,15 +1,15 @@
-package com.think.oms.domain.model.aggregate.createorder;
+package com.think.oms.domain.model.aggregate.create;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.think.oms.domain.model.constant.FeeType;
 import com.think.oms.domain.model.constant.OrderStatus;
 import com.think.oms.domain.model.dp.OrderId;
-import com.think.oms.domain.model.valueobject.ordercreate.OrderInvoice;
-import com.think.oms.domain.model.valueobject.OrderSku;
-import com.think.oms.domain.model.valueobject.OrderSkuItem;
-import com.think.oms.domain.model.valueobject.ordercreate.OrderUser;
-import com.think.oms.domain.pl.SkuInfo;
+import com.think.oms.domain.model.valueobject.create.OrderInvoice;
+import com.think.oms.domain.model.valueobject.create.OrderSku;
+import com.think.oms.domain.model.valueobject.create.OrderSkuItem;
+import com.think.oms.domain.model.valueobject.create.OrderUser;
+import com.think.oms.domain.pl.SkuItemInfo;
 import com.think.oms.domain.pl.command.OrderCreateCommand;
 import lombok.Getter;
 import org.springframework.util.Assert;
@@ -145,10 +145,10 @@ public class OrderCreateAggregate {
      * 比如外部sku转内部sku,sku 是否组合
      * @param skuInfoMap
      */
-    public void modifyOrderSku(Map<String,SkuInfo> skuInfoMap){
+    public void modifyOrderSku(Map<String, SkuItemInfo> skuInfoMap){
         this.getSkuInfos().forEach(orderSku -> {
             //完善信息 调用OrderSku 领域方法
-            SkuInfo skuInfo = skuInfoMap.get(orderSku.getExternalSkuId());
+            SkuItemInfo skuInfo = skuInfoMap.get(orderSku.getExternalSkuId());
             if(Objects.isNull(skuInfo)){
                 Assert.isTrue(false,String.format("根据外部skuIds=[%s]查询不到商品信息!!!",orderSku.getExternalSkuId()));
                 return;

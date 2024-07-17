@@ -1,6 +1,5 @@
 package com.think.oms.domain.pl.event;
 
-import com.think.oms.domain.model.aggregate.createorder.OrderCreateAggregate;
 import lombok.Data;
 
 @Data

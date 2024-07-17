@@ -2,7 +2,7 @@ package com.think.oms.osh.mq;
 
 import com.alibaba.fastjson.JSONObject;
 import com.think.oms.app.service.OrderAppService;
-import com.think.oms.domain.pl.command.OrderFulfillmentCommand;
+import com.think.oms.domain.pl.command.OrderFulfillCommand;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.rocketmq.spring.core.RocketMQListener;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +26,7 @@ public class OfcConsumer implements RocketMQListener<String> {
            log.info("收到order-fulfillment-center 发货信息msg={}",msg);
            //解析msg
            JSONObject json = JSONObject.parseObject(msg);
-           OrderFulfillmentCommand command = OrderFulfillmentCommand.builder()
+           OrderFulfillCommand command = OrderFulfillCommand.builder()
                    .orderNo(json.getString("orderNo"))
                    .ofcOrderNo(json.getString("ofcOrderNo"))
                    .build();
