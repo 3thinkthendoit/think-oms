@@ -5,7 +5,7 @@ import lombok.Getter;
 @Getter
 public enum SkuType {
 
-    SINGEL(1,"单品"),COMBINE(2,"组合");
+    SINGEL(1,"单品"),COMBINE(2,"组合"),VIRTUAL(3,"虚拟商品");
 
     private int code;
     private String desc;

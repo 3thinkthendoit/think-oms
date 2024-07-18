@@ -4,8 +4,6 @@ import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Maps;
 import com.think.oms.domain.model.constant.OrderSource;
 import com.think.oms.domain.model.dp.OrderId;
-import com.think.oms.domain.model.valueobject.fulfill.ShippingCallbackRecord;
-import com.think.oms.domain.model.valueobject.fulfill.ShippingSkuItem;
 import com.think.oms.domain.pl.SkuItemInfo;
 import com.think.oms.domain.pl.command.OrderFulfillCommand;
 import lombok.Getter;
@@ -65,7 +63,8 @@ public class OrderFulfillAggregate {
         }
         skuItemInfos.forEach(skuItemInfo -> {
             //SkuItemInfo 转 ShippingSkuItem
-            orderSkuItems.put(skuItemInfo.getSkuId(),new ShippingSkuItem(skuItemInfo.getSkuId(),skuItemInfo.getExternalSkuId(),
+            orderSkuItems.put(skuItemInfo.getSkuFullInfo().getSkuId(),
+                    new ShippingSkuItem(skuItemInfo.getSkuFullInfo().getSkuId(),skuItemInfo.getSkuFullInfo().getExternalSkuId(),
                     skuItemInfo.getSkuAmount()));
         });
     }

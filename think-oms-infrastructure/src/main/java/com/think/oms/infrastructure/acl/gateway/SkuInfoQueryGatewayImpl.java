@@ -2,7 +2,7 @@ package com.think.oms.infrastructure.acl.gateway;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import com.think.oms.domain.pl.SkuItemInfo;
+import com.think.oms.domain.pl.SkuFullInfo;
 import com.think.oms.domain.pl.request.SkuInfoQueryRequest;
 import com.think.oms.domain.pl.response.SkuInfoQueryResponse;
 import com.think.oms.domain.port.gateway.SkuInfoQueryGateway;
@@ -29,7 +29,7 @@ public class SkuInfoQueryGatewayImpl implements SkuInfoQueryGateway {
             params.put("externalSkuIds",request.getExternalSkuIds());
         }
         String result = httpClient.post("http://api/sku-service/queryBySkuIds",params);
-        List<SkuItemInfo> skuInfos = Lists.newArrayList();
+        List<SkuFullInfo> skuInfos = Lists.newArrayList();
         //解析result pl to SkuInfo对象
         return SkuInfoQueryResponse.builder()
                 .skuInfos(skuInfos)

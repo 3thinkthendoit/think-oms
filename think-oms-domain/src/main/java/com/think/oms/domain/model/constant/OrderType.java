@@ -3,17 +3,16 @@ package com.think.oms.domain.model.constant;
 import lombok.Getter;
 
 @Getter
-public enum OrderStatus {
-    UN_PAY(1,"未支付"),
-    PAYED(1,"已支付"),
-    CANCEL(2,"取消"),
-    HANG_UP(3,"挂起");
+public enum OrderType {
+
+    STANDARD(1,"标准订单"),DISCOUNT_FEE(2,"优惠金额");
 
     private int code;
     private String desc;
 
-    private OrderStatus(int code, String desc) {
+    private OrderType(int code, String desc) {
         this.code = code;
         this.desc = desc;
     }
+
 }

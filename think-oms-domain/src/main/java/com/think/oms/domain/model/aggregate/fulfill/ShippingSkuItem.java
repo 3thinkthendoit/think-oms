@@ -1,4 +1,4 @@
-package com.think.oms.domain.model.valueobject.fulfill;
+package com.think.oms.domain.model.aggregate.fulfill;
 
 import lombok.Getter;
 
@@ -15,15 +15,15 @@ public class ShippingSkuItem {
      */
     private String externalSkuId;
 
-    /**
-     * skuCode
-     */
-    private String skuCode;
-
-    /**
-     * 外部skuCode
-     */
-    private String externalSkuCode;
+//    /**
+//     * skuCode
+//     */
+//    private String skuCode;
+//
+//    /**
+//     * 外部skuCode
+//     */
+//    private String externalSkuCode;
 
     /**
      * sku数量

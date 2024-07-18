@@ -4,7 +4,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.think.oms.domain.model.aggregate.create.OrderCreateAggregate;
 import com.think.oms.domain.model.constant.FeeType;
-import com.think.oms.domain.model.valueobject.create.OrderSkuItem;
+import com.think.oms.domain.model.aggregate.create.OrderSkuItem;
 import com.think.oms.domain.pl.command.OrderCreateCommand;
 import com.think.oms.infrastructure.core.mybatis.po.OrderBaseInfo;
 import com.think.oms.infrastructure.core.mybatis.po.OrderSkuInfo;

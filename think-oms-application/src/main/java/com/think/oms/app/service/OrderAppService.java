@@ -10,8 +10,6 @@ import com.think.oms.domain.pl.event.OrderCreatedEvent;
 import com.think.oms.domain.pl.event.OrderUpdatedEvent;
 import com.think.oms.domain.pl.query.OrderInfoQuery;
 import com.think.oms.domain.pl.request.OrderQueryRequest;
-import com.think.oms.domain.port.gateway.InvoiceGateway;
-import com.think.oms.domain.port.gateway.OfcGateway;
 import com.think.oms.domain.port.gateway.OrderInfoGateway;
 import com.think.oms.domain.port.publisher.OrderEventPublisher;
 import com.think.oms.domain.port.repository.OrderRepository;
@@ -38,10 +36,6 @@ public class OrderAppService {
     @Autowired
     OrderFulfillDomainService orderFulfillDomainService;
     @Autowired
-    OfcGateway ofcGateway;
-    @Autowired
-    InvoiceGateway invoiceGateway;
-    @Autowired
     OrderInfoGateway orderInfoGateway;
 
     /**
@@ -54,7 +48,9 @@ public class OrderAppService {
         orderCreateDomainService.initBaseInfo(aggregate);
         aggregate.check();
         aggregate.priceCalculate();
+        orderCreateDomainService.deductInventory(aggregate);
         orderRepository.save(aggregate);
+        orderCreateDomainService.afterOrderBeCreated(aggregate);
         orderEventPublisher.publish(new OrderCreatedEvent(aggregate.getOrderId().getOrderNo()));
     }
 
@@ -64,11 +60,7 @@ public class OrderAppService {
      * @param orderNo
      */
     public void doHandleAfterOrderBeCreated(String orderNo){
-        //通知订单履约
-        ofcGateway.fulfill(orderNo);
-        //通知开发票
-        invoiceGateway.issue(orderNo);
-        //通知olap服务
+
     }
 
     /**

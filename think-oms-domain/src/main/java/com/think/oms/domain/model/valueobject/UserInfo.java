@@ -1,9 +1,9 @@
-package com.think.oms.domain.model.valueobject.create;
+package com.think.oms.domain.model.valueobject;
 
 import lombok.Getter;
 
 @Getter
-public class OrderUser {
+public class UserInfo {
 
     /**
      * 用户ID
@@ -20,7 +20,7 @@ public class OrderUser {
      */
     private UserType userType;
 
-    public OrderUser(Long userId, String userName, UserType userType){
+    public UserInfo(Long userId, String userName, UserType userType){
 
     }
 

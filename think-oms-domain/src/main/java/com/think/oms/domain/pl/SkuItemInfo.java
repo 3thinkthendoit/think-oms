@@ -8,35 +8,9 @@ import java.util.List;
 public class SkuItemInfo {
 
     /**
-     * skuId
+     * 商品基本信息
      */
-
-    private String skuId;
-
-    /**
-     * 外部skuId
-     */
-    private String externalSkuId;
-
-    /**
-     * skuCode
-     */
-    private String skuCode;
-
-    /**
-     * 外部skuCode
-     */
-    private String externalSkuCode;
-
-    /**
-     * Sku Name
-     */
-    private String skuName;
-
-    /**
-     * Sku原始价格
-     */
-    private Long skuPrice;
+    private SkuFullInfo skuFullInfo;
 
     /**
      * sku实付价格

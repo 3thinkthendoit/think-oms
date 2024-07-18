@@ -7,6 +7,7 @@ import com.think.oms.domain.pl.OrderInfo;
 import com.think.oms.domain.pl.request.OrderQueryRequest;
 import com.think.oms.domain.pl.response.OrderQueryResponse;
 import com.think.oms.domain.port.gateway.OrderInfoGateway;
+import com.think.oms.domain.port.gateway.SkuInfoQueryGateway;
 import com.think.oms.infrastructure.core.mybatis.mapper.OrderInfoMapper;
 import com.think.oms.infrastructure.core.mybatis.po.OrderBaseInfo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,8 @@ public class OrderInfoGatewayImpl implements OrderInfoGateway {
 
     @Autowired
     OrderInfoMapper orderInfoMapper;
+    @Autowired
+    SkuInfoQueryGateway skuInfoQueryGateway;
 
     /**
      * 订单信息查询
@@ -34,6 +37,7 @@ public class OrderInfoGatewayImpl implements OrderInfoGateway {
         queryWrapper.eq(OrderBaseInfo::getExternalOrderNo,request.getExternalOrderNo());
         queryWrapper.eq(OrderBaseInfo::getOrderSource,request.getOrderSource().getCode());
         List<OrderBaseInfo> orderList =  orderInfoMapper.selectList(queryWrapper);
+        //skuInfoQueryGateway.query()
         //PL 转换
         List<OrderInfo> orders = Lists.newArrayList();
         orderList.forEach(orderBaseInfo -> {

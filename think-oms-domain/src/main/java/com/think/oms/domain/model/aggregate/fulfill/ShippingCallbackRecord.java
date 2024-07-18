@@ -1,4 +1,4 @@
-package com.think.oms.domain.model.valueobject.fulfill;
+package com.think.oms.domain.model.aggregate.fulfill;
 
 import com.think.oms.domain.model.constant.OrderSource;
 import lombok.Getter;

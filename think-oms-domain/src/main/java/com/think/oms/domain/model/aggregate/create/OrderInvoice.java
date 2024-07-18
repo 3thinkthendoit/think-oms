@@ -1,4 +1,4 @@
-package com.think.oms.domain.model.valueobject.create;
+package com.think.oms.domain.model.aggregate.create;
 
 import lombok.Getter;
 
@@ -18,10 +18,6 @@ public class OrderInvoice {
     public OrderInvoice(String invoiceName, String invoiceDetails){
         this.invoiceName = invoiceName;
         this.invoiceDetails = invoiceDetails;
-    }
-
-    public void modify(){
-
     }
 
 }

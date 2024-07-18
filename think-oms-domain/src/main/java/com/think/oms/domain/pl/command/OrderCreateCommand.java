@@ -2,8 +2,9 @@ package com.think.oms.domain.pl.command;
 
 import com.think.oms.domain.model.constant.OrderSource;
 import com.think.oms.domain.model.constant.OrderStatus;
-import com.think.oms.domain.model.valueobject.create.OrderUser;
-import com.think.oms.domain.pl.SkuItemInfo;
+import com.think.oms.domain.model.constant.OrderType;
+import com.think.oms.domain.model.valueobject.UserInfo;
+import com.think.oms.domain.pl.OrderSkuInfo;
 import lombok.Builder;
 import lombok.Data;
 import org.springframework.util.Assert;
@@ -29,6 +30,16 @@ public class OrderCreateCommand {
     private OrderStatus orderStatus;
 
     /**
+     * 订单类型
+     */
+    private OrderType orderType;
+
+    /**
+     * 店铺编码
+     */
+    private String storeCode;
+
+    /**
      * 订单来源
      */
     private OrderSource orderSource;
@@ -46,7 +57,7 @@ public class OrderCreateCommand {
     /**
      * Sku下单信息
      */
-    private List<SkuItemInfo> skuInfoList;
+    private List<OrderSkuInfo> orderSkuInfos;
 
     /**
      * 下单用户信息
@@ -61,14 +72,12 @@ public class OrderCreateCommand {
     /**
      * 用户类型
      */
-    private OrderUser.UserType userType;
-
+    private UserInfo.UserType userType;
 
     /**
      * 收货地址
      */
     private String address;
-
 
     /**
      * 发票信息
@@ -92,5 +101,6 @@ public class OrderCreateCommand {
         Assert.notNull(externalOrderNo,"externalOrderNo is null !!!");
         //其他验证自行补充
     }
+
 
 }
