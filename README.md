@@ -6,8 +6,8 @@
 
 
 # 代码结构说明
+<pre>
 think-oms
-├─ 📁.vscode
 ├─ 📁think-oms-application
 │  ├─ 📁src
 │  │  └─ 📁main
@@ -171,4 +171,4 @@ think-oms
 │  │                    │  │  └─ 📄OrderInfoIfaceImpl.java
 │  │                    │  └─ 📄OrderInfoIface.java
 │  │                    └─ 📄ThinkOmsApplication.java
-
+</pre>
