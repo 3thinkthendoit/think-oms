@@ -25,6 +25,9 @@ public class OrderSkuItem {
     private Integer skuAmount;
 
     @Getter
+    private Integer stockAmount;
+
+    @Getter
     private Long payPrice;
 
     private Map<FeeType,Long> feeAmountInfos;
@@ -35,5 +38,9 @@ public class OrderSkuItem {
         this.payPrice = payPrice;
         this.skuAmount = skuAmount;
         this.feeAmountInfos = Maps.newHashMap();
+    }
+
+    public void deduct(Integer stockAmount){
+        this.stockAmount = stockAmount;
     }
 }

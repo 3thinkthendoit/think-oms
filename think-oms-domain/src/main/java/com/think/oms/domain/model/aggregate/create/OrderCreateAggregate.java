@@ -8,10 +8,14 @@ import com.think.oms.domain.model.constant.OrderType;
 import com.think.oms.domain.model.dp.OrderId;
 import com.think.oms.domain.model.valueobject.StoreInfo;
 import com.think.oms.domain.model.valueobject.UserInfo;
+import com.think.oms.domain.pl.InventoryInfo;
 import com.think.oms.domain.pl.SkuFullInfo;
 import com.think.oms.domain.pl.command.OrderCreateCommand;
 import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.Assert;
+import org.springframework.util.CollectionUtils;
+
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -20,6 +24,7 @@ import java.util.Objects;
  * 订单聚合
  */
 @Getter
+@Slf4j
 public class OrderCreateAggregate {
 
     /**
@@ -175,9 +180,22 @@ public class OrderCreateAggregate {
     }
 
     /**
-     * 库存扣减成功
+     * 库存扣减处理
      */
-    public void deductInventorySuccess(){
+    public void deductInventory(List<InventoryInfo> inventoryInfos){
+        if(CollectionUtils.isEmpty(inventoryInfos)){
+            return;
+        }
         this.deductInventory = true;
+        Map<String,OrderSkuItem> skuItemMap = Maps.newHashMap();
+        skuItems.forEach(skuItem->{skuItemMap.put(skuItem.getSkuId(),skuItem);});
+        inventoryInfos.forEach(inventoryInfo -> {
+            OrderSkuItem orderSkuItem = skuItemMap.get(inventoryInfo.getSkuId());
+            if(Objects.isNull(orderSkuItem)){
+                log.error("skuId={}扣减库存信息不存在!!!",inventoryInfo.getSkuId());
+                return;
+            }
+            orderSkuItem.deduct(inventoryInfo.getAmount());
+        });
     }
 }

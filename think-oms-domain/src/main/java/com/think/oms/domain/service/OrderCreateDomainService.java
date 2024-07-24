@@ -112,8 +112,6 @@ public class OrderCreateDomainService {
         DeductInventoryRequest request = DeductInventoryRequest.builder()
                 .build();
         DeductInventoryResponse response = inventoryGateway.deduct(request);
-        if(response.isDeductSuccess()){
-            aggregate.deductInventorySuccess();
-        }
+        aggregate.deductInventory(response.getInventoryInfos());
     }
 }
