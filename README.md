@@ -15,6 +15,9 @@
 
 ![diagram-14395309108625627799](https://github.com/user-attachments/assets/4d478c25-ce90-42b0-a708-241f5e091dbe)
 
+创建订单时序图
+![diagram-10159225477760837334](https://github.com/user-attachments/assets/08e6a62d-dcd2-46e1-9b25-153fc053d672)
+
 
 # 代码分层架构实践
 ![image](https://github.com/user-attachments/assets/51593795-74c6-4c3d-8dd0-1edf68975115)
