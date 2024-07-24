@@ -3,7 +3,6 @@ package com.think.oms.infrastructure.acl.api.pdd;
 import com.think.oms.domain.pl.command.OrderCreateCommand;
 import com.think.oms.domain.pl.request.ShippingCallbackRequest;
 import com.think.oms.domain.pl.response.ShippingCallbackResponse;
-import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 

@@ -13,15 +13,17 @@ public class UserInfo {
     /**
      * 用户名称
      */
-    private String userName;
+    private String username;
 
     /**
      * 用户类型
      */
     private UserType userType;
 
-    public UserInfo(Long userId, String userName, UserType userType){
-
+    public UserInfo(Long userId, String username, UserType userType){
+        this.userId =  userId;
+        this.username = username;
+        this.userType = userType;
     }
 
 

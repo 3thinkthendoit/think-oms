@@ -80,16 +80,30 @@ public class OrderCreateCommand {
     private String address;
 
     /**
+     * 手机号
+     */
+    private String mobile;
+
+    /**
+     * 收件人
+     */
+    private String recipient;
+
+    /**
      * 发票信息
      */
     private String invoiceName;
 
     private String invoiceDetails;
 
+
+    
+
     /**
      * 附加信息
      */
     private Map<String,Object> attachInfos;
+
 
 
     /**

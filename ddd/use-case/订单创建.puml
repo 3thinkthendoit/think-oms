@@ -1,0 +1,16 @@
+@startuml
+'https://plantuml.com/use-case-diagram
+left to right direction
+actor  "定时任务" as Job
+actor  "三方系统 " as System
+
+(创建订单) as (CreateOrder)
+
+System --> (CreateOrder)
+Job ---> (CreateOrder)
+
+CreateOrder -->(金额拆分)
+CreateOrder -->(保存订单信息)
+CreateOrder -->(库存扣减)
+CreateOrder -->(通知其他系统)
+@enduml

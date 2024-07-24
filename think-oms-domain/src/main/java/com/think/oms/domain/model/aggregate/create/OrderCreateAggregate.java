@@ -66,7 +66,7 @@ public class OrderCreateAggregate {
     /**
      * 收货地址
      */
-    private String address;
+    public ShippingAddress shippingAddress;
 
 
     /**
@@ -84,7 +84,6 @@ public class OrderCreateAggregate {
      * 附加信息
      */
     private Map<String,Object> attachInfos;
-
 
     /**
      * 库存扣减
@@ -111,7 +110,7 @@ public class OrderCreateAggregate {
         aggregate.orderId = new OrderId(command.getExternalOrderNo(),command.getOrderSource());
         aggregate.orderPrice = command.getOrderPrice();
         aggregate.orderTitle = command.getOrderTitle();
-        aggregate.address = command.getAddress();
+        aggregate.shippingAddress = new ShippingAddress(command.getRecipient(),command.getMobile(),command.getAddress());
         aggregate.attachInfos = command.getAttachInfos();
         aggregate.buyer = new UserInfo(command.getUserId(),command.getUserName(),command.getUserType());
         aggregate.invoiceInfo = new OrderInvoice(command.getInvoiceName(),command.getInvoiceDetails());
@@ -135,6 +134,9 @@ public class OrderCreateAggregate {
         Assert.isTrue(OrderStatus.PAYED.getCode() != orderStatus.getCode(),
                 String.format("orderNo={},orderStatus={},未支付不允许接入!!!"));
         //领域限制条件在此编写
+        Assert.isNull(this.invoiceInfo,"发票信息不正确!!!");
+        Assert.isNull(this.buyer.getUserId(),"用户信息不正确!!!");
+        Assert.isNull(this.shippingAddress.getAddressCode(),"下单地址信息不正确!!!");
     }
 
     /**

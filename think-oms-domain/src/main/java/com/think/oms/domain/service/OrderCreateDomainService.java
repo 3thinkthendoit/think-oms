@@ -29,10 +29,6 @@ public class OrderCreateDomainService {
     @Autowired
     SkuInfoQueryGateway skuInfoQueryGateway;
     @Autowired
-    OfcGateway ofcGateway;
-    @Autowired
-    InvoiceGateway invoiceGateway;
-    @Autowired
     InventoryGateway inventoryGateway;
 
     /**
@@ -54,11 +50,17 @@ public class OrderCreateDomainService {
      * @param aggregate
      */
     public void initBaseInfo(OrderCreateAggregate aggregate){
+        this.initStoreInfo(aggregate);
         this.initSkuInfo(aggregate);
         this.initInvoiceInfo(aggregate);
-        //完善其他信息
+        this.initShippingAddress(aggregate);
+        this.initBuyer(aggregate);
     }
 
+    /**
+     * 完善SKU信息
+     * @param aggregate
+     */
     private void  initSkuInfo(OrderCreateAggregate aggregate){
         List<String> externalSkuIds = Lists.newArrayList();
         aggregate.getSkuInfos().forEach(orderSku -> {externalSkuIds.add(orderSku.getSkuInfo().getExternalSkuId());});
@@ -74,18 +76,31 @@ public class OrderCreateDomainService {
     }
 
     private void  initInvoiceInfo(OrderCreateAggregate aggregate){
-        //查询发票域 完善发票信息 参考 isExist 调用发票南向网关
+        //查询发票域 完善发票信息
         //aggregate.getInvoiceInfo().modify();
     }
 
+    /**
+     * 完善地址
+     */
+    private void initShippingAddress(OrderCreateAggregate aggregate){
+        //查询基本信息域 完善下单地址信息
+    }
 
-    public void afterOrderBeCreated(OrderCreateAggregate aggregate){
-        String orderNo = aggregate.getOrderId().getOrderNo();
-        //通知订单履约
-        ofcGateway.fulfill(orderNo);
-        //通知开发票
-        invoiceGateway.issue(orderNo);
-        //通知olap服务
+    /**
+     * 用户信息
+     * @param aggregate
+     */
+    private void initBuyer(OrderCreateAggregate aggregate){
+        //查询用户域 完善用户信息
+    }
+
+    /**
+     * 店铺信息
+     * @param aggregate
+     */
+    private void initStoreInfo(OrderCreateAggregate aggregate){
+
     }
 
     /**

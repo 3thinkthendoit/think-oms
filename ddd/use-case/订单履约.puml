@@ -1,0 +1,12 @@
+@startuml
+'https://plantuml.com/use-case-diagram
+left to right direction
+
+(履约订单) as (FulfillOrder)
+
+MQ --> (FulfillOrder)
+
+FulfillOrder -->(更新订单信息)
+FulfillOrder -->(发货回传三方系统)
+FulfillOrder -->(通知其他系统)
+@enduml

@@ -1,0 +1,58 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+autonumber
+participant "Port[Gateway/Repository]" as Port
+
+box 接口层(北向网关OSH)
+participant "Job/Rpc/Mq/Listener"
+end box
+box 应用层(App)
+participant ApplicationService
+end box
+box 领域层(Domain)
+participant Aggregate
+participant DomainService
+participant Port
+end box
+box 基础设施层(南向网关ACL)
+participant DbGatewayImpl
+participant "Sku/Store/User/GatewayImpl"
+participant OrderRepositoryImpl
+participant InventoryGatewayImpl
+end box
+
+"Job/Rpc/Mq/Listener" -> ApplicationService: 电商平台协议转OrderCreateCommand
+ApplicationService -> Aggregate:创建订单聚合
+ApplicationService -> DomainService:检查订单是否存在
+DomainService ->  Port:查询订单
+Port -> DbGatewayImpl:调用DbGateway查询订单信息
+note right
+  查询order数据库或者缓存,具体实现与领域层无关
+end note
+DomainService -> Aggregate:调用领域方法处理订单是否重复
+ApplicationService -> DomainService:完善订单域信息
+DomainService ->  Port:查询店铺,sku,发票,下单用户等信息
+note right
+  这里是分别调用skuGateway,storeGateway,
+  userGateway.这里合并一起表示
+end note
+Port -> "Sku/Store/User/GatewayImpl": 请求微服务iface查询
+note right
+  Gateway实现具体调用微服务还是查询redis
+  或者调用第三方接口与领域层无关
+end note
+DomainService -> Aggregate:调用领域方法更新聚合信息
+ApplicationService -> Aggregate:检查订单接入条件
+ApplicationService -> Aggregate:金额拆分计算
+ApplicationService -> DomainService:扣减库存
+DomainService ->  Port:扣减
+Port -> InventoryGatewayImpl: 请求微服务iface扣减库存
+DomainService -> Aggregate:调用领域方法处理库存扣减逻辑
+ApplicationService -> Port:调用Repository持久化聚合
+Port ->OrderRepositoryImpl: Mybatis orm实现保存数据
+note right
+  领域模型和数据库表模型不一样,
+  表模型变更不影响领域模型
+end note
+ApplicationService ->ApplicationService:发布OrderCreatedEvent领域事件
+@enduml

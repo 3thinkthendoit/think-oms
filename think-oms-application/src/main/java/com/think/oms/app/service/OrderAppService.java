@@ -2,6 +2,7 @@ package com.think.oms.app.service;
 
 import com.think.oms.domain.model.aggregate.create.OrderCreateAggregate;
 import com.think.oms.domain.model.aggregate.fulfill.OrderFulfillAggregate;
+import com.think.oms.domain.model.constant.OrderSource;
 import com.think.oms.domain.pl.OrderInfo;
 import com.think.oms.domain.pl.command.OrderAssCommand;
 import com.think.oms.domain.pl.command.OrderCreateCommand;
@@ -10,6 +11,8 @@ import com.think.oms.domain.pl.event.OrderCreatedEvent;
 import com.think.oms.domain.pl.event.OrderUpdatedEvent;
 import com.think.oms.domain.pl.query.OrderInfoQuery;
 import com.think.oms.domain.pl.request.OrderQueryRequest;
+import com.think.oms.domain.port.gateway.InvoiceGateway;
+import com.think.oms.domain.port.gateway.OfcGateway;
 import com.think.oms.domain.port.gateway.OrderInfoGateway;
 import com.think.oms.domain.port.publisher.OrderEventPublisher;
 import com.think.oms.domain.port.repository.OrderRepository;
@@ -18,6 +21,7 @@ import com.think.oms.domain.service.OrderFulfillDomainService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 import java.util.List;
 
 /**
@@ -37,6 +41,10 @@ public class OrderAppService {
     OrderFulfillDomainService orderFulfillDomainService;
     @Autowired
     OrderInfoGateway orderInfoGateway;
+    @Autowired
+    OfcGateway ofcGateway;
+    @Autowired
+    InvoiceGateway invoiceGateway;
 
     /**
      * 统一创建订单(流程编排-低耦合)
@@ -50,7 +58,6 @@ public class OrderAppService {
         aggregate.priceCalculate();
         orderCreateDomainService.deductInventory(aggregate);
         orderRepository.save(aggregate);
-        orderCreateDomainService.afterOrderBeCreated(aggregate);
         orderEventPublisher.publish(new OrderCreatedEvent(aggregate.getOrderId().getOrderNo()));
     }
 
@@ -60,7 +67,20 @@ public class OrderAppService {
      * @param orderNo
      */
     public void doHandleAfterOrderBeCreated(String orderNo){
-
+        OrderQueryRequest request = OrderQueryRequest
+                .builder()
+                .orderNo(orderNo)
+                .build();
+        List<OrderInfo> orders = orderInfoGateway.query(request).getOrders();
+        if(CollectionUtils.isEmpty(orders)){
+            return;
+        }
+        //通知订单履约
+        ofcGateway.fulfill(orderNo);
+        //通知开发票
+        invoiceGateway.issue(orderNo);
+        //通知olap服务
+        //通知结算
     }
 
     /**
@@ -95,8 +115,8 @@ public class OrderAppService {
         OrderQueryRequest request = OrderQueryRequest
                 .builder()
                 .orderNo(query.getOrderNo())
-                //.orderSource()
-                //.externalOrderNo()
+                .orderSource(OrderSource.ofByCode(query.getOrderSource()))
+                .externalOrderNo(query.getExternalOrderNo())
                 .build();
         return orderInfoGateway.query(request).getOrders();
     }
