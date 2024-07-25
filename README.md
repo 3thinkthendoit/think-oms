@@ -43,7 +43,7 @@ public class OrderInfo {
 }
 
 OrderInfo orderInfo = new OrderInfo();
-orderInfo.setrderStatus(OrderStatus.valueOf(1));//类的属性随时可以通过set方法变更
+orderInfo.setOrderStatus(OrderStatus.valueOf(1));//类的属性随时可以通过set方法变更
 
 ```
 ### 充血模型(封装属性和领域行为)
@@ -83,9 +83,10 @@ public class OrderSku {
     }
 }
 OrderSkuInfo orderSkuInfo = getOrderSkuInfo();
-OrderSku orderSku = new OrderSku(orderSkuInfo);//类的属性只能通过构造方法和工厂进行赋值
-//更新类的属性,只能调用带业务含义命名的领域方法
+//类的属性只能通过构造方法和工厂进行赋值
+OrderSku orderSku = new OrderSku(orderSkuInfo);
 SkuFullInfo skuFullInfo = getSkuFullInfo();
+//更新类的属性,只能调用带业务含义命名的领域方法
 orderSku.modifySku(skuFullInfo);
 ```
 ### 领域服务(与外部协作领域行为，不适合放在聚合)
