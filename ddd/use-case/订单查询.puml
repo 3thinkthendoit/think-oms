@@ -1,0 +1,16 @@
+@startuml
+'https://plantuml.com/use-case-diagram
+left to right direction
+actor  "用户" as Job
+actor  "三方系统 " as System
+
+(查询订单) as (QueryOrder)
+
+System --> (QueryOrder)
+Job ---> (QueryOrder)
+
+QueryOrder -->(sku下单信息)
+QueryOrder -->(发货信息)
+QueryOrder -->(基本信息)
+
+@enduml

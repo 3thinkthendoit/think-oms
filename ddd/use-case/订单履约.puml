@@ -6,7 +6,7 @@ left to right direction
 
 MQ --> (FulfillOrder)
 
-FulfillOrder -->(更新订单信息)
+FulfillOrder -->(更新skuItem信息)
 FulfillOrder -->(发货回传三方系统)
 FulfillOrder -->(通知其他系统)
 @enduml

@@ -1,0 +1,92 @@
+@startuml
+'https://plantuml.com/class-diagram
+
+ class OrderCreateAggregate{
+        - OrderId orderId;
+        - OrderStatus orderStatus;
+        - OrderType orderType;
+        - OrderPay orderPay;
+        - StoreInfo storeInfo;
+        - String orderTitle;
+        - Long orderPrice;
+        - List<OrderSku> skuInfos;
+        - UserInfo buyer;
+        - ShippingAddress address;
+        - OrderInvoice invoiceInfo;
+        - List<OrderSkuItem> skuItems;
+        - Map<String,Object> attachInfos;
+        - boolean deductInventory;
+        + Object get()
+        + void check()
+        + void priceCalculate()
+        + void modifyOrderSku()
+        + void deductInventory
+ }
+ class OrderPay{
+        - PayType payType;
+        - String payInfo;
+        + Object get()
+
+ }
+ class OrderSku{
+        - SkuInfo skuInfo;
+        - Long skuPayPrice;
+        - Integer skuBuyAmount;
+        - SkuType skuType;
+        + Object get()
+        + void modifySku()
+ }
+ class OrderSkuItem{
+        - SkuInfo skuInfo;
+        - Integer skuAmount;
+        - Integer stockAmount;
+        - Long payPrice;
+        - Map<FeeType,Long> feeAmountInfos;
+        + Object get()
+ }
+ class OrderInvoice{
+        - String invoiceName;
+        - String invoiceDetails;
+        + Object get()
+ }
+ class ShippingAddress{
+       - String recipient;
+       - String contactInfo;
+       - int addressCode;
+       - String address;
+       + Object get()
+ }
+ class SkuInfo{
+    - String skuId;
+    - String externalSkuId;
+    - String skuCode;
+    - String externalSkuCode;
+    - String skuName;
+    - Long skuPrice;
+    - SkuType skuType;
+    + Object get()
+ }
+ class StoreInfo{
+      - String storeId;
+      - String storeCode;
+      - String storeName;
+      + Object get()
+ }
+ class UserInfo{
+     - Long userId;
+     - String username;
+     - UserType userType;
+     + Object get()
+ }
+
+
+OrderCreateAggregate "1" *-- "n" OrderSku:包含
+OrderCreateAggregate "1" *-- "n" OrderSkuItem:包含
+OrderCreateAggregate *-- UserInfo
+OrderCreateAggregate *-- StoreInfo
+OrderCreateAggregate *-- OrderInvoice
+OrderCreateAggregate *-- OrderPay
+OrderCreateAggregate *-- ShippingAddress
+OrderSku *-- SkuInfo
+OrderSkuItem *-- SkuInfo
+@enduml

@@ -15,7 +15,6 @@ import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
-
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -67,12 +66,15 @@ public class OrderCreateAggregate {
      */
     private UserInfo buyer;
 
+    /**
+     * 支付信息
+     */
+    private OrderPay orderPay;
 
     /**
      * 收货地址
      */
     public ShippingAddress shippingAddress;
-
 
     /**
      * 发票信息
@@ -122,6 +124,7 @@ public class OrderCreateAggregate {
         aggregate.orderType = command.getOrderType();
         aggregate.storeInfo = new StoreInfo(command.getStoreCode());
         List<OrderSku> skuInfos = Lists.newArrayList();
+        aggregate.orderPay = new OrderPay();
         //sku 转 domain sku
         command.getOrderSkuInfos().forEach(orderSkuInfo -> {
             skuInfos.add(new OrderSku(orderSkuInfo));
@@ -129,6 +132,7 @@ public class OrderCreateAggregate {
         aggregate.skuInfos = skuInfos;
         aggregate.orderStatus = command.getOrderStatus();
         aggregate.deductInventory = false;
+
     }
 
     /**
