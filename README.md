@@ -6,21 +6,27 @@
 
 # 战略设计实践
 
-用例图：
+#### 用例图：
 
-创建订单
+##### 创建订单
 
 ![diagram-5860164288651623821](https://github.com/user-attachments/assets/9fd98c3a-cae9-446c-ace1-6c6b7e0b92aa)
 
-订单履约(订单发货)
+##### 订单履约(订单发货)
 
 
 ![diagram-14395309108625627799](https://github.com/user-attachments/assets/4d478c25-ce90-42b0-a708-241f5e091dbe)
 
 
-领域模型
+#### 领域模型
 
 ![企业微信截图_1721810362293](https://github.com/user-attachments/assets/65722a4a-493a-4bec-bf46-bd7384da73ed)
+
+#### 领域划分
+
+![企业微信截图_17218786804161](https://github.com/user-attachments/assets/93b8e6f0-f5f8-4788-bfa9-8bb29d3ecc2e)
+
+
 
 # 战术设计实践
 
