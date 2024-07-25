@@ -14,9 +14,14 @@
 
 ##### 订单履约(订单发货)
 
-
 ![diagram-14395309108625627799](https://github.com/user-attachments/assets/4d478c25-ce90-42b0-a708-241f5e091dbe)
 
+##### 订单查询
+![diagram-15589063498785607716](https://github.com/user-attachments/assets/563359ef-914e-4c73-af21-8066a3826a12)
+
+
+##### 订单更新
+暂未画
 
 #### 领域模型
 
@@ -30,6 +35,10 @@
 
 
 # 战术设计实践
+
+## 创建订单代码模型图
+![diagram-14049767362457485694](https://github.com/user-attachments/assets/501036d6-2df1-47a9-a88c-b0058b98fc40)
+
 
 ##  代码落地
 ### 贫血模型(属性和行为分离)
@@ -90,7 +99,6 @@ public class OrderInfo {
         this.orderStatus = OrderStatus.HANG_UP;
     }
 }
-OrderInfo orderInfo = OrderInfo;
 OrderCreateCommand command = getOrderCreateCommand();
 OrderInfo orderInfo = OrderInfo.create(command);
 //发生业务 需要挂起订单 已发货的无需挂起
