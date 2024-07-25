@@ -26,7 +26,68 @@
 
 ##  代码落地
 ### 贫血模型(属性和行为分离)
+```Java
+@Data
+public class OrderInfo {
+
+    private String orderNo;
+
+    private String externalOrderNo;
+
+    private OrderSource orderSource;
+
+    private OrderStatus orderStatus;
+
+    public List<SkuItemInfo> skuInfos;
+
+}
+
+OrderInfo orderInfo = new OrderInfo();
+orderInfo.setrderStatus(OrderStatus.valueOf(1));//类的属性随时可以通过set方法变更
+
+```
 ### 充血模型(封装属性和领域行为)
+```Java
+//不允许提供set方法
+@Getter
+public class OrderSku {
+    /**
+     * 商品基本信息
+     */
+    private SkuInfo skuInfo;
+    /**
+     * sku实付价格
+     */
+    private Long skuPayPrice;
+    /**
+     * 下单数量
+     */
+    private Integer skuBuyAmount;
+    /**
+     * Sku类型
+     */
+    private SkuType skuType;
+
+    public OrderSku(OrderSkuInfo orderSkuInfo){
+        this.skuInfo = SkuInfo.create(orderSkuInfo.getExternalSkuId(), orderSkuInfo.getExternalSkuCode());;
+        this.skuBuyAmount = orderSkuInfo.getSkuBuyAmount();
+        this.skuPayPrice =orderSkuInfo.getSkuPayPrice();
+        this.skuType = skuInfo.getSkuType();
+    }
+
+    /**
+     * 领域方法 完善sku信息
+     */
+    public void modifySku(SkuFullInfo skuFullInfo){
+        this.skuInfo.init(skuFullInfo);
+    }
+}
+OrderSkuInfo orderSkuInfo = getOrderSkuInfo();
+OrderSku orderSku = new OrderSku(orderSkuInfo);//类的属性只能通过构造方法和工厂进行赋值
+//更新类的属性,只能调用带业务含义命名的领域方法
+SkuFullInfo skuFullInfo = getSkuFullInfo();
+orderSku.modifySku(skuFullInfo);
+```
 ### 领域服务(与外部协作领域行为，不适合放在聚合)
 ### SOLID原则
 ### 业务行为和领域行为区分
