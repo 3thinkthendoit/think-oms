@@ -44,8 +44,8 @@ public class OrderInfo {
 }
 
 OrderInfo orderInfo = new OrderInfo();
-//发生业务 需要挂起订单 
-if(this.orderStatus == OrderStatus.FULFILLED){
+//发生业务 需要挂起订单 ,已发货的无需挂起
+if(this.orderStatus != OrderStatus.FULFILLED){
     orderInfo.setOrderStatus(OrderStatus.HANG_UP);//类的属性随时可以通过set方法变更
 }
 
@@ -86,7 +86,7 @@ public class OrderInfo {
 OrderInfo orderInfo = OrderInfo;
 OrderCreateCommand command = getOrderCreateCommand();
 OrderInfo orderInfo = OrderInfo.create(command);
-//发生业务 需要挂起订单
+//发生业务 需要挂起订单 已发货的无需挂起
 orderInfo.hangup();
 
 ```
