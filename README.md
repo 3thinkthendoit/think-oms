@@ -24,7 +24,8 @@
 
 #### 领域划分
 
-![企业微信截图_17218786804161](https://github.com/user-attachments/assets/93b8e6f0-f5f8-4788-bfa9-8bb29d3ecc2e)
+![企业微信截图_1721878884495](https://github.com/user-attachments/assets/dde20ab9-5e06-43e1-84a8-c1bc15ed66ea)
+
 
 
 
