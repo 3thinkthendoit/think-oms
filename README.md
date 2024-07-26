@@ -157,7 +157,8 @@ public void deductInventory(OrderCreateAggregate aggregate){
 
 ### DDD分层代码调用时序图
 
-![diagram-10159225477760837334](https://github.com/user-attachments/assets/08e6a62d-dcd2-46e1-9b25-153fc053d672)
+![diagram-5973189397319537185](https://github.com/user-attachments/assets/22f72db8-a858-4648-a3b3-0e34e7fbaedb)
+
 
 
 ## 代码分层架构实践
