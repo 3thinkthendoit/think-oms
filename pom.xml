@@ -7,7 +7,7 @@
     <version>1.0.0-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>think-oms</name>
-    <description>Demo project for Spring Boot</description>
+    <description>Order-OMS DDD project for Spring Boot</description>
     <modules>
         <module>think-oms-interface</module>
         <module>think-oms-application</module>
@@ -27,6 +27,7 @@
         <fastjosn.verison>1.2.78</fastjosn.verison>
         <okhttp.version>4.9.1</okhttp.version>
         <rocketmq.veriosn>2.2.0</rocketmq.veriosn>
+        <druid-spring-boot-starter>1.1.10</druid-spring-boot-starter>
     </properties>
     <dependencies>
         <dependency>
@@ -96,6 +97,11 @@
                 <groupId>mysql</groupId>
                 <artifactId>mysql-connector-java</artifactId>
                 <version>${mysql-connector.veriosn}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>druid-spring-boot-starter</artifactId>
+                <version>${druid-spring-boot-starter}</version>
             </dependency>
             <dependency>
                 <groupId>com.alibaba</groupId>

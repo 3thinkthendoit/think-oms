@@ -1,7 +1,7 @@
 @startuml
 'https://plantuml.com/sequence-diagram
 autonumber
-participant "Port[Gateway/Repository]" as Port
+participant "Port[Gateway/Repository]适配器" as Port
 
 box 接口层(北向网关OSH)
 participant "Job/Rpc/Mq/Listener"
@@ -9,7 +9,7 @@ end box
 box 应用层(App)
 participant ApplicationService
 end box
-box 领域层(Domain)
+box 领域层(Domain) #EEEBDC
 participant Aggregate
 participant DomainService
 participant Port
@@ -22,9 +22,13 @@ participant InventoryGatewayImpl
 end box
 
 "Job/Rpc/Mq/Listener" -> ApplicationService: 电商平台协议转OrderCreateCommand
+activate ApplicationService
 ApplicationService -> Aggregate:创建订单聚合
+activate Aggregate
 ApplicationService -> DomainService:检查订单是否存在
+activate DomainService
 DomainService ->  Port:查询订单
+activate Port
 Port -> DbGatewayImpl:调用DbGateway查询订单信息
 note right
   查询order数据库或者缓存,具体实现与领域层无关

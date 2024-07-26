@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class RocketMqClient  {
 
-    @Autowired
+    //@Autowired
     private RocketMQTemplate rocketMQTemplate;
 
     public void send(String topic, String message) {

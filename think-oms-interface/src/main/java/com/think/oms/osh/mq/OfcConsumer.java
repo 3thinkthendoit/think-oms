@@ -14,7 +14,7 @@ import org.apache.rocketmq.spring.annotation.RocketMQMessageListener;
  */
 @Component
 @Slf4j
-@RocketMQMessageListener(topic = "order-fulfillment-center", consumerGroup = "order-fulfillment-center-group")
+//@RocketMQMessageListener(topic = "order-fulfillment-center", consumerGroup = "order-fulfillment-center-group")
 public class OfcConsumer implements RocketMQListener<String> {
 
     @Autowired

@@ -1,0 +1,26 @@
+server:
+  port: 8000
+spring:
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://dev-db.viomi.net:3306/vm_report?characterEncoding=UTF-8&autoReconnect=true&autoReconnectForPools=true&useUnicode=true&zeroDateTimeBehavior=convertToNull&allowMultiQueries=true&useSSL=false
+    username: viomi
+    password: dN3E6@(n3F6*23hwdP
+    druid:
+      type: com.alibaba.druid.pool.DruidDataSource
+      initial-size: 20
+      min-idle: 20
+      max-active: 200
+      max-wait: 30000
+      time-between-eviction-runs-millis: 60000
+      min-evictable-idle-time-millis: 300000
+      validation-query: select '1' from dual
+      test-while-idle: true
+      test-on-borrow: false
+      test-on-return: false
+      pool-prepared-statements: true
+      max-open-prepared-statements: 20
+      max-pool-prepared-statement-per-connection-size: 20
+mybatis:
+  mapper-locations: classpath:mappers/*xml
+  type-aliases-package: com.think.oms.infrastructure.core.mybatis.po

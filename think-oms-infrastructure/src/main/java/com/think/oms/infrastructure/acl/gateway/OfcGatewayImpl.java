@@ -21,7 +21,7 @@ public class OfcGatewayImpl implements OfcGateway {
 
     @Autowired
     RocketMqClient rocketMqClient;
-    @Autowired
+    //@Autowired
     //OfcIface ofcIface;
 
     @Override
