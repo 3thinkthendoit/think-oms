@@ -155,7 +155,8 @@ public void deductInventory(OrderCreateAggregate aggregate){
 ### DDD和数据一致性取舍和平衡
 
 
-【创建订单】DDD分层代码调用时序图
+### DDD分层代码调用时序图
+
 ![diagram-10159225477760837334](https://github.com/user-attachments/assets/08e6a62d-dcd2-46e1-9b25-153fc053d672)
 
 
