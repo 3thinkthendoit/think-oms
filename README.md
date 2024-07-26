@@ -139,9 +139,57 @@ public void deductInventory(OrderCreateAggregate aggregate){
 }
     
 ```
-### SOLID原则
+### 聚合
+
+限制外界对聚合的对象访问
+维护领域概念性完整
+保证聚合内数据强一致性
 
 
+### 值对象
+```Java
+@Getter
+public class StoreInfo {
+
+    private String storeId;
+    private String storeCode;
+    private String storeName;
+
+    public void init(String storeId,String storeCode,String storeName){
+        Assert.isNull(storeCode,"storeCode is null!!!");
+        Assert.isNull(storeCode,"storeCode is null!!!");
+        Assert.isNull(storeCode,"storeCode is null!!!");
+        this.storeCode = storeCode;
+        this.storeId = storeId;
+        this.storeName = storeName;
+    }
+
+    public StoreInfo(String storeCode){
+        Assert.isNull(storeCode,"storeCode is null!!!");
+        this.storeCode = storeCode;
+    }
+```
+### DP对象
+
+本身也是值对象，附加了领域行为
+```Java
+@Getter
+public class OrderId {
+    private String orderNo;
+    private  String externalOrderNo;
+    private OrderSource orderSource;
+
+    public OrderId(String externalOrderNo,OrderSource orderSource){
+        this.externalOrderNo = externalOrderNo;
+        this.orderSource = orderSource;
+        this.orderNo = System.currentTimeMillis()+"";
+    }
+    
+    public OrderId(String orderNo){
+        this.orderNo = orderNo;
+    }
+}
+```
 ### 业务行为和领域行为区分
 
 业务行为:未来一段时间可能发生变化的逻辑(低耦合，可以随时编排)
