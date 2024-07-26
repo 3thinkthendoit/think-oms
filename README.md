@@ -105,13 +105,60 @@ OrderInfo orderInfo = OrderInfo.create(command);
 orderInfo.hangup();
 
 ```
+
+### 流程编排(低耦合)
+```Java
+ //创建订单聚合
+ OrderCreateAggregate aggregate = OrderCreateAggregate.create(command);
+ //检验订单是否存在
+ orderCreateDomainService.isExist(aggregate);
+ //通过domian service 与外部商品域、用户域、基本信息域完成协作(高内聚)
+ orderCreateDomainService.initBaseInfo(aggregate);
+ //订单接入检查,调用聚合的领域方法
+ aggregate.check();
+ //订单金额拆分,调用聚合的领域方法
+ aggregate.priceCalculate();
+ //通过domian service 与库存域 完成库存扣减
+ orderCreateDomainService.deductInventory(aggregate);
+ //持久化聚合
+ orderRepository.save(aggregate);
+ //发布领域事件，通知订单创建成功
+ orderEventPublisher.publish(new OrderCreatedEvent(aggregate.getOrderId().getOrderNo()));
+```
 ### 领域服务(与外部协作领域行为，不适合放在聚合)
+```Java
+orderCreateDomainService.deductInventory(aggregate);
+
+public void deductInventory(OrderCreateAggregate aggregate){
+    DeductInventoryRequest request = DeductInventoryRequest.builder()
+                .build();
+    //通过南向网关调用 库存域进行库存扣减
+    DeductInventoryResponse response = inventoryGateway.deduct(request);
+    //domain service 调用聚合的领域方法 完成库存扣减后逻辑
+    aggregate.deductInventory(response.getInventoryInfos());
+}
+    
+```
 ### SOLID原则
+
+
 ### 业务行为和领域行为区分
+
+业务行为:未来一段时间可能发生变化的逻辑(低耦合，可以随时编排)
+
+领域行为：未来一段时间逻辑不变(高内聚，长时间沉淀后的领域逻辑)
+
+
 ### DDD和性能之间取舍和平衡
 
-【创建订单】DDD分层代码调用时序图
-![diagram-10159225477760837334](https://github.com/user-attachments/assets/08e6a62d-dcd2-46e1-9b25-153fc053d672)
+
+### DDD和数据一致性取舍和平衡
+
+
+### DDD分层代码调用时序图
+
+![diagram-5973189397319537185](https://github.com/user-attachments/assets/22f72db8-a858-4648-a3b3-0e34e7fbaedb)
+
 
 
 ## 代码分层架构实践
