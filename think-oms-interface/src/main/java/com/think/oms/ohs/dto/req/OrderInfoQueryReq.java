@@ -1,4 +1,4 @@
-package com.think.oms.osh.dto.req;
+package com.think.oms.ohs.dto.req;
 
 import lombok.Builder;
 import lombok.Data;

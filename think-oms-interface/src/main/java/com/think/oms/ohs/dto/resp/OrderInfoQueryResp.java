@@ -1,4 +1,4 @@
-package com.think.oms.osh.dto.resp;
+package com.think.oms.ohs.dto.resp;
 
 import com.think.oms.domain.model.constant.OrderSource;
 import com.think.oms.domain.model.constant.OrderStatus;

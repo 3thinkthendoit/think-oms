@@ -1,4 +1,4 @@
-package com.think.oms.osh;
+package com.think.oms.ohs;
 
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;

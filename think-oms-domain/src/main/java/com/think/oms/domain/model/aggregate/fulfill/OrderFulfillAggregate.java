@@ -80,8 +80,6 @@ public class OrderFulfillAggregate {
         shippingSkuItem.modifyShippingAmount(shippingAmount);
     }
 
-
-
     /**
      * 创建发货回传记录
      */
@@ -89,6 +87,4 @@ public class OrderFulfillAggregate {
         this.shippingCallbackRecord = new ShippingCallbackRecord(this.orderId.getOrderNo(),this.orderId.getExternalOrderNo(),
                 this.orderId.getOrderSource(), JSONObject.toJSONString(this.orderSkuItems),status,callResult);
     }
-
-
 }

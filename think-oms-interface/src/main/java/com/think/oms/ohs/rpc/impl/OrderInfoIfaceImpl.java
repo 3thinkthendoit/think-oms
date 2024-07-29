@@ -1,11 +1,11 @@
-package com.think.oms.osh.rpc.impl;
+package com.think.oms.ohs.rpc.impl;
 
 import com.think.oms.app.service.OrderAppService;
 import com.think.oms.domain.pl.OrderInfo;
 import com.think.oms.domain.pl.query.OrderInfoQuery;
-import com.think.oms.osh.dto.req.OrderInfoQueryReq;
-import com.think.oms.osh.dto.resp.OrderInfoQueryResp;
-import com.think.oms.osh.rpc.OrderInfoIface;
+import com.think.oms.ohs.dto.req.OrderInfoQueryReq;
+import com.think.oms.ohs.dto.resp.OrderInfoQueryResp;
+import com.think.oms.ohs.rpc.OrderInfoIface;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RestController;
 

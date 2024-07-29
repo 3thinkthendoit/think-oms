@@ -1,4 +1,4 @@
-package com.think.oms.osh.controller;
+package com.think.oms.ohs.controller;
 
 import com.google.common.collect.Maps;
 import com.think.oms.app.service.OrderAppService;

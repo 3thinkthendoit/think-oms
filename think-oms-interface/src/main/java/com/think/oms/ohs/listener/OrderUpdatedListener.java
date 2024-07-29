@@ -1,4 +1,4 @@
-package com.think.oms.osh.listener;
+package com.think.oms.ohs.listener;
 
 import com.think.oms.app.service.OrderAppService;
 import com.think.oms.domain.pl.event.OrderUpdatedEvent;

@@ -1,4 +1,4 @@
-package com.think.oms.osh.job;
+package com.think.oms.ohs.job;
 
 import com.think.oms.app.service.OrderAppService;
 import com.think.oms.domain.pl.command.OrderCreateCommand;

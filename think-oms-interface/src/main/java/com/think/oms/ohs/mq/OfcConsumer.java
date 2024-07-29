@@ -1,4 +1,4 @@
-package com.think.oms.osh.mq;
+package com.think.oms.ohs.mq;
 
 import com.alibaba.fastjson.JSONObject;
 import com.think.oms.app.service.OrderAppService;
@@ -7,7 +7,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.rocketmq.spring.core.RocketMQListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.apache.rocketmq.spring.annotation.RocketMQMessageListener;
 
 /**
  * 监听订单履约系统 发货信息
