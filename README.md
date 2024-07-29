@@ -148,6 +148,9 @@ public void deductInventory(OrderCreateAggregate aggregate){
 限制外界对聚合的对象访问
 维护领域概念性完整
 保证聚合内数据强一致性
+变更状态：业务角度去表达领域逻辑
+自给自足：操作自身属性进行业务逻辑
+互为协作：与别的对象进行协作
 ```Java
 /**
  * 订单履约聚合
@@ -227,20 +230,20 @@ public class OrderFulfillAggregate {
 }
 ```
 ### 值对象
+自我验证,自我组合,自我运算,属性在整个过程中,除构建方法外不允许改变
+
+
 ```Java
 @Getter
 public class StoreInfo {
 
-    private String storeId;
     private String storeCode;
     private String storeName;
 
-    public void init(String storeId,String storeCode,String storeName){
+    public void init(String storeCode,String storeName){
         Assert.isNull(storeCode,"storeCode is null!!!");
-        Assert.isNull(storeCode,"storeCode is null!!!");
-        Assert.isNull(storeCode,"storeCode is null!!!");
+        Assert.isNull(storeName,"storeName is null!!!");
         this.storeCode = storeCode;
-        this.storeId = storeId;
         this.storeName = storeName;
     }
 
@@ -270,12 +273,65 @@ public class OrderId {
     }
 }
 ```
-### 业务行为和领域行为区分
+### 业务方法和领域方法为区分
 
-业务行为:未来一段时间可能发生变化的逻辑(低耦合，可以随时编排)
+业务方法:未来一段时间可能发生变化的逻辑(低耦合，可以随时编排)，编排骤可以分开
+```Java
+ public void createOrder(OrderCreateCommand command){
+        OrderCreateAggregate aggregate = OrderCreateAggregate.create(command);
+        orderCreateDomainService.isExist(aggregate);
+        orderCreateDomainService.initBaseInfo(aggregate);
+        aggregate.check();
+        aggregate.priceCalculate();
+        orderCreateDomainService.deductInventory(aggregate);
+        orderRepository.save(aggregate);
+        orderEventPublisher.publish(new OrderCreatedEvent(aggregate.getOrderId().getOrderNo()));
+    }
+```
 
-领域行为：未来一段时间逻辑不变(高内聚，长时间沉淀后的领域逻辑)
+领域方法：未来一段时间逻辑不变(高内聚，长时间沉淀后的领域逻辑，场景不相关的，可复用的)，编排骤无法分开
+```Java
+orderCreateDomainService.initBaseInfo(aggregate);
+```
 
+### 领域方法和领域行为区分
+领域行为：聚合/实体内操作自身数据
+```Java
+aggregate.priceCalculate();
+
+/**
+* sku金额拆分计算(领域行为)
+*/
+    public void  priceCalculate(){
+        //优惠金额，运费 等附加费用 根据 sku下单金额权重比例进行金额拆分
+        this.skuItems = Lists.newArrayList();
+        this.skuInfos.forEach(skuInfo -> {
+            //拆组合商品 计算子sku需要均摊的金额，附加费用
+            Map<FeeType,Long> feeAmountInfos = Maps.newHashMap();
+            //feeAmountInfos.put(FeeType.TRAN_FEE,)
+            //feeAmountInfos.put(FeeType.DISCOUNT_FEE,)
+            OrderSkuItem skuItem = new OrderSkuItem(skuInfo.getSkuInfo().getSkuId(),skuInfo.getSkuInfo().getSkuCode(),
+                    skuInfo.getSkuBuyAmount(),skuInfo.getSkuPayPrice(),feeAmountInfos);
+            this.skuItems.add(skuItem);
+        });
+    }
+```
+
+领域方法:与南向网关合作数据,设计模式满足扩展需求,资源库/抽象网关提供数据,名称中需要包含动词
+```Java
+ orderCreateDomainService.deductInventory(aggregate);
+ /**
+     * 扣减库存 (领域方法)
+     * 多领域协作
+     * @param aggregate
+     */
+    public void deductInventory(OrderCreateAggregate aggregate){
+        DeductInventoryRequest request = DeductInventoryRequest.builder()
+                .build();
+        DeductInventoryResponse response = inventoryGateway.deduct(request);
+        aggregate.deductInventory(response.getInventoryInfos());
+    }
+```
 
 ### DDD和性能之间取舍和平衡
 
