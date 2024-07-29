@@ -145,12 +145,12 @@ public void deductInventory(OrderCreateAggregate aggregate){
 ```
 ### 聚合
 
-限制外界对聚合的对象访问
-维护领域概念性完整
-保证聚合内数据强一致性
-变更状态：业务角度去表达领域逻辑
-自给自足：操作自身属性进行业务逻辑
-互为协作：与别的对象进行协作
+* 限制外界对聚合的对象访问
+* 维护领域概念性完整
+* 保证聚合内数据强一致性
+* 变更状态：业务角度去表达领域逻辑
+* 自给自足：操作自身属性进行业务逻辑
+* 互为协作：与别的对象进行协作
 ```Java
 /**
  * 订单履约聚合
@@ -230,7 +230,10 @@ public class OrderFulfillAggregate {
 }
 ```
 ### 值对象
-自我验证,自我组合,自我运算,属性在整个过程中,除构建方法外不允许改变
+* 自我验证
+* 自我组合
+* 自我运算
+* 属性在整个过程中,除构建方法外不允许改变
 
 
 ```Java
@@ -292,6 +295,18 @@ public class OrderId {
 领域方法：未来一段时间逻辑不变(高内聚，长时间沉淀后的领域逻辑，场景不相关的，可复用的)，编排骤无法分开
 ```Java
 orderCreateDomainService.initBaseInfo(aggregate);
+
+    /**
+     * 领域方法(高内聚低耦合)
+     * @param aggregate
+     */
+    public void initBaseInfo(OrderCreateAggregate aggregate){
+        this.initStoreInfo(aggregate);
+        this.initSkuInfo(aggregate);
+        this.initInvoiceInfo(aggregate);
+        this.initShippingAddress(aggregate);
+        this.initBuyer(aggregate);
+    }
 ```
 
 ### 领域方法和领域行为区分
