@@ -287,9 +287,20 @@ public class OrderId {
 
 通过领域事件解耦,可以做一致性数据补偿
 ```Java
- /**
-     * 订单创建后续逻辑
-     * 没有数据变更的可以绕过领域逻辑调用南向网关
+    //订单创建成功发布领域事件
+    orderEventPublisher.publish(new OrderCreatedEvent(aggregate.getOrderId().getOrderNo()));
+
+    //监听领域事件
+    @EventListener(value = OrderCreatedEvent.class)
+    @Async
+    public void onApplicationEvent(OrderCreatedEvent event) {
+        log.info("收到OrderCreatedEvent :orderNo=[{}]",event.getOrderNo());
+        orderAppService.doHandleAfterOrderBeCreated(event.getOrderNo());
+    }
+
+     /**
+     * 订单创建后续逻辑(可做数据一致性补偿)
+     * 
      * @param orderNo
      */
     public void doHandleAfterOrderBeCreated(String orderNo){
