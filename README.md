@@ -279,9 +279,36 @@ public class OrderId {
 
 ### DDD和性能之间取舍和平衡
 
+接入订单聚合是设计成批量接入还是单次接入？如何取舍
 
 ### DDD和数据一致性取舍和平衡
 
+订单聚合持久化后，需要推送下游 结算、发票、发货等，是否在 订单流程编排中编排？调用外部服务超时如何处理
+
+通过领域事件解耦,可以做一致性数据补偿
+```Java
+ /**
+     * 订单创建后续逻辑
+     * 没有数据变更的可以绕过领域逻辑调用南向网关
+     * @param orderNo
+     */
+    public void doHandleAfterOrderBeCreated(String orderNo){
+        OrderQueryRequest request = OrderQueryRequest
+                .builder()
+                .orderNo(orderNo)
+                .build();
+        List<OrderInfo> orders = orderInfoGateway.query(request).getOrders();
+        if(CollectionUtils.isEmpty(orders)){
+            return;
+        }
+        //通知订单履约
+        ofcGateway.fulfill(orderNo);
+        //通知开发票
+        invoiceGateway.issue(orderNo);
+        //通知olap服务
+        //通知结算
+    }
+```
 
 ### DDD分层代码调用时序图
 
