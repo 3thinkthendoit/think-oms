@@ -149,7 +149,7 @@ public class OrderCreateAggregate {
     }
 
     /**
-     * sku金额拆分计算(领域方法)
+     * sku金额拆分计算(领域行为)
      */
     public void  priceCalculate(){
         //优惠金额，运费 等附加费用 根据 sku下单金额权重比例进行金额拆分

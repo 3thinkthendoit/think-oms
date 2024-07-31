@@ -104,7 +104,7 @@ public class OrderCreateDomainService {
     }
 
     /**
-     * 扣减库存
+     * 扣减库存 (领域方法)
      * 多领域协作
      * @param aggregate
      */
