@@ -31,14 +31,17 @@
 
 ##### 订单履约(订单发货)
 
-![diagram-14395309108625627799](https://github.com/user-attachments/assets/4d478c25-ce90-42b0-a708-241f5e091dbe)
+![企业微信截图_17231965244469](https://github.com/user-attachments/assets/9cbb110d-3d1b-4607-94ee-bf4cfaf6383f)
 
 ##### 订单查询
 ![diagram-15589063498785607716](https://github.com/user-attachments/assets/563359ef-914e-4c73-af21-8066a3826a12)
 
 
-##### 订单更新
-暂未画
+##### 发货回传
+
+
+![企业微信截图_17231966512293](https://github.com/user-attachments/assets/2d543ca6-12c4-4a67-bbe9-0a695379a8fa)
+
 
 #### 领域模型
 
