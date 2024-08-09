@@ -1,7 +1,7 @@
 package com.think.oms.app.service;
 
 import com.think.oms.domain.model.aggregate.create.OrderCreateAggregate;
-import com.think.oms.domain.model.aggregate.fulfill.OrderFulfillAggregate;
+import com.think.oms.domain.model.aggregate.shippingcallback.ShippingCallbackAggregate;
 import com.think.oms.domain.model.constant.OrderSource;
 import com.think.oms.domain.pl.OrderInfo;
 import com.think.oms.domain.pl.command.OrderAssCommand;
@@ -75,7 +75,7 @@ public class OrderAppService {
         if(CollectionUtils.isEmpty(orders)){
             return;
         }
-        //通知订单履约
+        //通知订单分仓
         ofcGateway.fulfill(orderNo);
         //通知开发票
         invoiceGateway.issue(orderNo);
@@ -84,11 +84,11 @@ public class OrderAppService {
     }
 
     /**
-     * 订单发货逻辑处理
+     * 订单发货回传处理
      * @param command
      */
-    public void orderFulfill(OrderFulfillCommand command){
-        OrderFulfillAggregate aggregate = OrderFulfillAggregate.create(command);
+    public void shippingCallback(OrderFulfillCommand command){
+        ShippingCallbackAggregate aggregate = ShippingCallbackAggregate.create(command);
         orderFulfillDomainService.initBaseInfo(aggregate);
         aggregate.check();
         orderFulfillDomainService.shippingCallback(aggregate);

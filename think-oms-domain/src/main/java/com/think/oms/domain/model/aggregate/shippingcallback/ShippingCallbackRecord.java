@@ -1,4 +1,4 @@
-package com.think.oms.domain.model.aggregate.fulfill;
+package com.think.oms.domain.model.aggregate.shippingcallback;
 
 import com.think.oms.domain.model.constant.OrderSource;
 import lombok.Getter;

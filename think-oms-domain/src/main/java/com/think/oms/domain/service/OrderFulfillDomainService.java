@@ -1,7 +1,7 @@
 package com.think.oms.domain.service;
 
 import com.alibaba.fastjson.JSONObject;
-import com.think.oms.domain.model.aggregate.fulfill.OrderFulfillAggregate;
+import com.think.oms.domain.model.aggregate.shippingcallback.ShippingCallbackAggregate;
 import com.think.oms.domain.pl.request.OfcOrderQueryRequest;
 import com.think.oms.domain.pl.request.OrderQueryRequest;
 import com.think.oms.domain.pl.request.ShippingCallbackRequest;
@@ -27,7 +27,7 @@ public class OrderFulfillDomainService {
     @Autowired
     ShippingCallbackGateway shippingCallbackGateway;
 
-    public void initBaseInfo(OrderFulfillAggregate aggregate){
+    public void initBaseInfo(ShippingCallbackAggregate aggregate){
         this.initOrderInfo(aggregate);
         this.initSkuShippingInfo(aggregate);
         //完善其他信息
@@ -37,7 +37,7 @@ public class OrderFulfillDomainService {
      * 订单基本信息
      * @param aggregate
      */
-    private void initOrderInfo(OrderFulfillAggregate aggregate){
+    private void initOrderInfo(ShippingCallbackAggregate aggregate){
         OrderQueryRequest request = OrderQueryRequest.builder()
                 .orderNo(aggregate.getOrderId().getOrderNo())
                 .build();
@@ -52,7 +52,7 @@ public class OrderFulfillDomainService {
      * sku发货信息
      * @param aggregate
      */
-    private void initSkuShippingInfo(OrderFulfillAggregate aggregate){
+    private void initSkuShippingInfo(ShippingCallbackAggregate aggregate){
         OfcOrderQueryRequest request = OfcOrderQueryRequest.builder()
                 .orderNo(aggregate.getOrderId().getOrderNo())
                 .build();
@@ -72,7 +72,7 @@ public class OrderFulfillDomainService {
      * 通知上游系统发货回传
      * @param aggregate
      */
-    public void shippingCallback(OrderFulfillAggregate aggregate){
+    public void shippingCallback(ShippingCallbackAggregate aggregate){
         if(!aggregate.isCallback()){
             log.info("orderNo={},无需发货回传!!!",aggregate.getOrderId().getOrderNo());
         }

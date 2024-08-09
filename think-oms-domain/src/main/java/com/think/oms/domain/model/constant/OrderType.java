@@ -5,7 +5,10 @@ import lombok.Getter;
 @Getter
 public enum OrderType {
 
-    STANDARD(1,"标准订单"),DISCOUNT_FEE(2,"优惠金额");
+    STANDARD(1,"标准订单"),
+    PRE_SALE(2,"预售订单"),
+    TEAM_BUY(3,"拼团订单")
+    ;
 
     private int code;
     private String desc;

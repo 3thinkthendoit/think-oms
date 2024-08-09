@@ -1,8 +1,6 @@
 package com.think.oms.domain.pl.command;
 
-import com.think.oms.domain.model.constant.OrderSource;
-import com.think.oms.domain.model.constant.OrderStatus;
-import com.think.oms.domain.model.constant.OrderType;
+import com.think.oms.domain.model.constant.*;
 import com.think.oms.domain.model.valueobject.UserInfo;
 import com.think.oms.domain.pl.OrderSkuInfo;
 import lombok.Builder;
@@ -55,6 +53,21 @@ public class OrderCreateCommand {
     private Long orderPrice;
 
     /**
+     * 支付方式
+     */
+    private PayType payType;
+
+    /**
+     * 优惠金额
+     */
+    private Long discountPrice;
+
+    /**
+     * 币钟
+     */
+    private Currency currency;
+
+    /**
      * Sku下单信息
      */
     private List<OrderSkuInfo> orderSkuInfos;
@@ -96,8 +109,10 @@ public class OrderCreateCommand {
 
     private String invoiceDetails;
 
-
-    
+    /**
+     * 附件费用信息
+     */
+    private Map<FeeType,Long > feeAmountMap;
 
     /**
      * 附加信息

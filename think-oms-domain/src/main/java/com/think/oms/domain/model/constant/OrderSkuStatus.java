@@ -9,7 +9,9 @@ public enum OrderSkuStatus {
     PART_SHIPPED(2,"部分发货"),
     SHIPPED(3,"全部发货"),
     RETURN(4,"全部退货"),
-    PART_RETURN(5,"部分退货");
+    PART_RETURN(5,"部分退货"),
+    CHECKED_IN(6,"已签收"),;
+
 
     private int code;
     private String desc;

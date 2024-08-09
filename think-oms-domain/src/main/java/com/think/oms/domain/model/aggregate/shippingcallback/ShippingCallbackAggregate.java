@@ -1,4 +1,4 @@
-package com.think.oms.domain.model.aggregate.fulfill;
+package com.think.oms.domain.model.aggregate.shippingcallback;
 
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Maps;
@@ -13,10 +13,10 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * 订单履约聚合
+ * 发货回传聚合
  */
 @Getter
-public class OrderFulfillAggregate {
+public class ShippingCallbackAggregate {
 
     private OrderId orderId;
 
@@ -26,9 +26,9 @@ public class OrderFulfillAggregate {
 
     private ShippingCallbackRecord shippingCallbackRecord;
 
-    public static OrderFulfillAggregate create(OrderFulfillCommand command){
+    public static ShippingCallbackAggregate create(OrderFulfillCommand command){
         command.validate();
-        OrderFulfillAggregate aggregate = new OrderFulfillAggregate();
+        ShippingCallbackAggregate aggregate = new ShippingCallbackAggregate();
         aggregate.orderId = new OrderId(command.getOrderNo());
         aggregate.orderSkuItems = Maps.newHashMap();
         return aggregate;

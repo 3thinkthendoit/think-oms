@@ -1,7 +1,7 @@
 package com.think.oms.domain.port.repository;
 
 import com.think.oms.domain.model.aggregate.create.OrderCreateAggregate;
-import com.think.oms.domain.model.aggregate.fulfill.OrderFulfillAggregate;
+import com.think.oms.domain.model.aggregate.shippingcallback.ShippingCallbackAggregate;
 import com.think.oms.domain.model.dp.OrderId;
 
 public interface OrderRepository {
@@ -10,6 +10,6 @@ public interface OrderRepository {
 
     public OrderCreateAggregate ofByOrderId(OrderId orderId);
 
-    public void update(OrderFulfillAggregate aggregate);
+    public void update(ShippingCallbackAggregate aggregate);
 
 }

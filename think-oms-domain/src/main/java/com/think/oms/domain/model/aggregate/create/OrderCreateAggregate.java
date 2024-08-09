@@ -8,13 +8,11 @@ import com.think.oms.domain.model.constant.OrderType;
 import com.think.oms.domain.model.dp.OrderId;
 import com.think.oms.domain.model.valueobject.StoreInfo;
 import com.think.oms.domain.model.valueobject.UserInfo;
-import com.think.oms.domain.pl.InventoryInfo;
 import com.think.oms.domain.pl.SkuFullInfo;
 import com.think.oms.domain.pl.command.OrderCreateCommand;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.Assert;
-import org.springframework.util.CollectionUtils;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -51,10 +49,6 @@ public class OrderCreateAggregate {
      */
     private String orderTitle;
 
-    /**
-     * 订单金额 单位分
-     */
-    private Long orderPrice;
 
     /**
      * Sku下单信息
@@ -92,10 +86,6 @@ public class OrderCreateAggregate {
      */
     private Map<String,Object> attachInfos;
 
-    /**
-     * 库存扣减
-     */
-    private boolean deductInventory;
 
     public static OrderCreateAggregate create(OrderCreateCommand command){
         command.validate();
@@ -115,7 +105,6 @@ public class OrderCreateAggregate {
 
     private static void baseCreate(OrderCreateAggregate aggregate, OrderCreateCommand command){
         aggregate.orderId = new OrderId(command.getExternalOrderNo(),command.getOrderSource());
-        aggregate.orderPrice = command.getOrderPrice();
         aggregate.orderTitle = command.getOrderTitle();
         aggregate.shippingAddress = new ShippingAddress(command.getRecipient(),command.getMobile(),command.getAddress());
         aggregate.attachInfos = command.getAttachInfos();
@@ -124,14 +113,15 @@ public class OrderCreateAggregate {
         aggregate.orderType = command.getOrderType();
         aggregate.storeInfo = new StoreInfo(command.getStoreCode());
         List<OrderSku> skuInfos = Lists.newArrayList();
-        aggregate.orderPay = new OrderPay();
+        //支付信息
+        aggregate.orderPay = new OrderPay(command.getCurrency(),command.getPayType(), command.getOrderPrice(),
+                command.getDiscountPrice(),command.getFeeAmountMap());
         //sku 转 domain sku
         command.getOrderSkuInfos().forEach(orderSkuInfo -> {
             skuInfos.add(new OrderSku(orderSkuInfo));
         });
         aggregate.skuInfos = skuInfos;
         aggregate.orderStatus = command.getOrderStatus();
-        aggregate.deductInventory = false;
 
     }
 
@@ -183,23 +173,4 @@ public class OrderCreateAggregate {
         });
     }
 
-    /**
-     * 库存扣减处理
-     */
-    public void deductInventory(List<InventoryInfo> inventoryInfos){
-        if(CollectionUtils.isEmpty(inventoryInfos)){
-            return;
-        }
-        this.deductInventory = true;
-        Map<String,OrderSkuItem> skuItemMap = Maps.newHashMap();
-        skuItems.forEach(skuItem->{skuItemMap.put(skuItem.getSkuId(),skuItem);});
-        inventoryInfos.forEach(inventoryInfo -> {
-            OrderSkuItem orderSkuItem = skuItemMap.get(inventoryInfo.getSkuId());
-            if(Objects.isNull(orderSkuItem)){
-                log.error("skuId={}扣减库存信息不存在!!!",inventoryInfo.getSkuId());
-                return;
-            }
-            orderSkuItem.deduct(inventoryInfo.getAmount());
-        });
-    }
 }
