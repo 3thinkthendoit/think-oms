@@ -63,7 +63,8 @@
 
 #### 订单中台架构实战 四层架构
 
-![企业微信截图_17231697162220](https://github.com/user-attachments/assets/b21ee1d1-63b9-45e1-b620-0cbe0e37cd29)
+![企业微信截图_17231697931191](https://github.com/user-attachments/assets/7c2b2931-c485-4092-a63a-9433be4435cd)
+
 
 
 
