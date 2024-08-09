@@ -9,14 +9,16 @@
 
 #### 订单履约流程图
 
-![订单履约流程图](https://github.com/user-attachments/assets/2b22f46d-6f24-497f-a56a-f70302ce1627)
+![订单履约流程图](https://github.com/user-attachments/assets/192e71cd-1c6d-4b26-b2fd-31247fea40c7)
+
 
 
 # 战略设计实践
 
 #### 产品愿景图
 
-![企业微信截图_17224192429493](https://github.com/user-attachments/assets/f1e636e8-df7d-4c48-98b9-d1057893f985)
+![企业微信截图_17231869995864](https://github.com/user-attachments/assets/f5a42e39-297d-46f1-baa8-53c1ad0d3539)
+
 
 
 
