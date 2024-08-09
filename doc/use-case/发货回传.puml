@@ -1,0 +1,12 @@
+@startuml
+'https://plantuml.com/use-case-diagram
+left to right direction
+
+(发货回传) as (ShippingCallback)
+
+MQ --> (ShippingCallback)
+
+ShippingCallback -->(更新skuItem信息)
+ShippingCallback -->(发货回传三方系统)
+ShippingCallback -->(通知其他系统)
+@enduml
