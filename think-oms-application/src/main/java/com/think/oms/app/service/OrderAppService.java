@@ -54,9 +54,8 @@ public class OrderAppService {
         OrderCreateAggregate aggregate = OrderCreateAggregate.create(command);
         orderCreateDomainService.isExist(aggregate);
         orderCreateDomainService.initBaseInfo(aggregate);
-        aggregate.check();
+        orderCreateDomainService.audit(aggregate);
         aggregate.priceCalculate();
-        orderCreateDomainService.deductInventory(aggregate);
         orderRepository.save(aggregate);
         orderEventPublisher.publish(new OrderCreatedEvent(aggregate.getOrderId().getOrderNo()));
     }

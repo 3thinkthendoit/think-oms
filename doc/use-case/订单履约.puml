@@ -1,0 +1,19 @@
+@startuml
+'https://plantuml.com/use-case-diagram
+left to right direction
+
+(订单履约) as (FulfillOrder)
+(订单拆单) as splitOrder
+MQ --> (FulfillOrder)
+
+FulfillOrder --> splitOrder
+FulfillOrder -->(订单分仓)
+FulfillOrder -->(通知仓库发货)
+
+splitOrder ..> (位置就近原则)
+splitOrder ..> (库存充足优先原则)
+splitOrder ..> (成本最优原则)
+splitOrder ..> (商品属性原则)
+splitOrder ..> (订单优先级原则)
+splitOrder ..> (仓库处理能力原则)
+@enduml

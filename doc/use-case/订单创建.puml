@@ -9,8 +9,8 @@ actor  "三方系统 " as System
 System --> (CreateOrder)
 Job ---> (CreateOrder)
 
+CreateOrder -->(订单审核)
 CreateOrder -->(金额拆分)
 CreateOrder -->(保存订单信息)
-CreateOrder -->(库存扣减)
 CreateOrder -->(通知其他系统)
 @enduml

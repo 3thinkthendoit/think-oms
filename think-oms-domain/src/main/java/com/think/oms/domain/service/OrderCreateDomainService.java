@@ -104,14 +104,18 @@ public class OrderCreateDomainService {
     }
 
     /**
-     * 扣减库存 (领域方法)
-     * 多领域协作
+     * 订单审核
      * @param aggregate
      */
-    public void deductInventory(OrderCreateAggregate aggregate){
-        DeductInventoryRequest request = DeductInventoryRequest.builder()
-                .build();
-        DeductInventoryResponse response = inventoryGateway.deduct(request);
-        aggregate.deductInventory(response.getInventoryInfos());
+    public void audit(OrderCreateAggregate aggregate){
+        aggregate.check();
+        this.riskCheck(aggregate);
+    }
+
+    /**
+     * 风控处理
+     */
+    private void riskCheck(OrderCreateAggregate aggregate){
+
     }
 }

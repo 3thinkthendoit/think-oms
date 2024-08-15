@@ -23,7 +23,12 @@ public class SkuItemInfo {
     private Integer skuAmount;
 
     /**
-     * 下单数量
+     * 发货优先级
+     */
+    private Integer priority;
+
+    /**
+     * 已发货数量
      */
     private Integer shippingAmount;
 
