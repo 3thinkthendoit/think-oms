@@ -54,7 +54,8 @@
 
 #### 上下文关系
 
-![企业微信截图_17222331343001](https://github.com/user-attachments/assets/0422a0d9-9419-49a6-8b42-56b6652fa677)
+![企业微信截图_17236915161424](https://github.com/user-attachments/assets/34475575-afd1-48a1-b74f-8f3461920098)
+
 
 
 # 战术设计实践
