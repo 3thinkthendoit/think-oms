@@ -51,11 +51,13 @@
 
 #### 领域划分
 
-![企业微信截图_1721878884495](https://github.com/user-attachments/assets/dde20ab9-5e06-43e1-84a8-c1bc15ed66ea)
+![企业微信截图_17237150702506](https://github.com/user-attachments/assets/1f88e689-9c49-425e-8b39-74a7a2abaa2d)
+
 
 #### 上下文关系
 
-![企业微信截图_17236915161424](https://github.com/user-attachments/assets/34475575-afd1-48a1-b74f-8f3461920098)
+![企业微信截图_17237149727451](https://github.com/user-attachments/assets/77dada29-0b86-43a4-ab7e-948045927f8b)
+
 
 
 
