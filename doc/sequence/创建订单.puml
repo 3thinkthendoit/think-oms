@@ -47,11 +47,11 @@ note right
 end note
 DomainService -> Aggregate:调用领域方法更新聚合信息
 ApplicationService -> Aggregate:检查订单接入条件
+ApplicationService -> DomainService:订单审核
+DomainService ->  Port:风控检查
+Port -> InventoryGatewayImpl: 请求风控微服务iface
+DomainService -> Aggregate:调用领域方法是否挂起订单
 ApplicationService -> Aggregate:金额拆分计算
-ApplicationService -> DomainService:扣减库存
-DomainService ->  Port:扣减
-Port -> InventoryGatewayImpl: 请求微服务iface扣减库存
-DomainService -> Aggregate:调用领域方法处理库存扣减逻辑
 ApplicationService -> Port:调用Repository持久化聚合
 Port ->OrderRepositoryImpl: Mybatis orm实现保存数据
 note right

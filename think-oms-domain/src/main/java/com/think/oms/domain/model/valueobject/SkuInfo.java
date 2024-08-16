@@ -1,5 +1,6 @@
 package com.think.oms.domain.model.valueobject;
 
+import com.think.oms.domain.model.constant.SkuCategory;
 import com.think.oms.domain.model.constant.SkuType;
 import com.think.oms.domain.pl.SkuFullInfo;
 import lombok.Getter;
@@ -43,6 +44,10 @@ public class SkuInfo {
      */
     private SkuType skuType;
 
+    /**
+     * 商品种类
+     */
+    private SkuCategory skuCategory;
 
 
     public void init(SkuFullInfo skuFullInfo){
@@ -54,6 +59,7 @@ public class SkuInfo {
         this.skuCode = skuFullInfo.getSkuCode();
         this.skuName = skuFullInfo.getSkuName();
         this.skuPrice = skuFullInfo.getSkuPrice();
+        this.skuCategory = skuFullInfo.getSkuCategory();
     }
 
     public  SkuInfo(String skuId ,String skuCode){

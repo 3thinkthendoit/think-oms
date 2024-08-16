@@ -1,5 +1,6 @@
 package com.think.oms.domain.pl;
 
+import com.think.oms.domain.model.constant.SkuCategory;
 import com.think.oms.domain.model.constant.SkuType;
 import lombok.Builder;
 import lombok.Data;
@@ -45,6 +46,8 @@ public class SkuFullInfo {
      * 商品类型
      */
     private SkuType skuType;
+
+    private SkuCategory skuCategory;
 
     /**
      * 商品数量

@@ -1,5 +1,6 @@
 package com.think.oms.domain.model.aggregate.create;
 
+import com.think.oms.domain.model.constant.SkuCategory;
 import com.think.oms.domain.model.constant.SkuType;
 import com.think.oms.domain.model.valueobject.SkuInfo;
 import com.think.oms.domain.pl.OrderSkuInfo;
@@ -30,6 +31,10 @@ public class OrderSku {
     private SkuType skuType;
 
 
+    /**
+     * 商品种类
+     */
+    private SkuCategory skuCategory;
 
     public OrderSku(OrderSkuInfo orderSkuInfo){
         this.skuInfo = SkuInfo.create(orderSkuInfo.getExternalSkuId(), orderSkuInfo.getExternalSkuCode());;

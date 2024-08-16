@@ -3,23 +3,16 @@ package com.think.oms.domain.model.aggregate.create;
 
 import com.google.common.collect.Maps;
 import com.think.oms.domain.model.constant.FeeType;
+import com.think.oms.domain.model.constant.SkuCategory;
 import lombok.Getter;
 import java.util.Map;
 
 
 public class OrderSkuItem {
 
-    @Getter
-    private String skuId;
-
-    @Getter
-    private String externalSkuId;
 
     @Getter
     private String skuCode;
-
-    @Getter
-    private String externalSkuCode;
 
     @Getter
     private Integer skuAmount;
@@ -30,17 +23,22 @@ public class OrderSkuItem {
     @Getter
     private Long payPrice;
 
+    /**
+     * 发货优先级
+     */
+    @Getter
+    private Integer priority;
+
     private Map<FeeType,Long> feeAmountInfos;
 
-    public OrderSkuItem(String skuId, String skuCode, Integer skuAmount, Long payPrice, Map<FeeType,Long> feeAmountInfos){
-        this.skuId = skuId;
+    public OrderSkuItem(String skuCode, Integer skuAmount, Long payPrice, Map<FeeType,Long> feeAmountInfos){
         this.skuCode = skuCode;
         this.payPrice = payPrice;
         this.skuAmount = skuAmount;
         this.feeAmountInfos = Maps.newHashMap();
     }
 
-    public void deduct(Integer stockAmount){
-        this.stockAmount = stockAmount;
+    public void priorityProcessing(Integer priority){
+        this.priority = priority;
     }
 }

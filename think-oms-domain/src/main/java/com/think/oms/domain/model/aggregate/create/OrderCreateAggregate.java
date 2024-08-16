@@ -2,9 +2,7 @@ package com.think.oms.domain.model.aggregate.create;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import com.think.oms.domain.model.constant.FeeType;
-import com.think.oms.domain.model.constant.OrderStatus;
-import com.think.oms.domain.model.constant.OrderType;
+import com.think.oms.domain.model.constant.*;
 import com.think.oms.domain.model.dp.OrderId;
 import com.think.oms.domain.model.valueobject.StoreInfo;
 import com.think.oms.domain.model.valueobject.UserInfo;
@@ -13,6 +11,8 @@ import com.think.oms.domain.pl.command.OrderCreateCommand;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.Assert;
+import org.springframework.util.CollectionUtils;
+
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -33,6 +33,11 @@ public class OrderCreateAggregate {
      * 订单状态
      */
     private OrderStatus orderStatus;
+
+    /**
+     * 订单备注
+     */
+    private String desc;
 
     /**
      * 订单类型
@@ -149,10 +154,37 @@ public class OrderCreateAggregate {
             Map<FeeType,Long> feeAmountInfos = Maps.newHashMap();
             //feeAmountInfos.put(FeeType.TRAN_FEE,)
             //feeAmountInfos.put(FeeType.DISCOUNT_FEE,)
-            OrderSkuItem skuItem = new OrderSkuItem(skuInfo.getSkuInfo().getSkuId(),skuInfo.getSkuInfo().getSkuCode(),
+            OrderSkuItem skuItem = new OrderSkuItem(skuInfo.getSkuInfo().getSkuCode(),
                     skuInfo.getSkuBuyAmount(),skuInfo.getSkuPayPrice(),feeAmountInfos);
             this.skuItems.add(skuItem);
         });
+    }
+
+    /**
+     * 优先级处理
+     */
+    public void priorityProcessing(){
+        if(CollectionUtils.isEmpty(this.skuItems)){
+            return;
+        }
+        Map<String,OrderSku> skuMap = Maps.newHashMap();
+        //子商品也需要转换,这里省略
+        this.skuInfos.forEach(skuInfo->{skuMap.put(skuInfo.getSkuInfo().getSkuCode(),skuInfo);});
+        this.skuItems.forEach(skuItem->{
+            OrderSku orderSku = skuMap.get(skuItem.getSkuCode());
+            Assert.notNull(orderSku,String.format("skuCode=%s查询不到sku信息",skuItem.getSkuCode()));
+             int priority = 1;
+             //生鲜优先发货
+             if(SkuCategory.FRUSH_FOOD == orderSku.getSkuCategory()){
+                 priority = 3;
+             }
+             //虚拟订单无需发货
+             if(SkuType.VIRTUAL == orderSku.getSkuType()){
+                 priority = 0;
+             }
+             skuItem.priorityProcessing(priority);
+        });
+
     }
 
 
@@ -171,6 +203,15 @@ public class OrderCreateAggregate {
             }
             orderSku.modifySku(skuFullInfo);
         });
+    }
+
+    /**
+     * 挂起订单
+     * @param desc
+     */
+    public void hangup(String desc){
+        this.orderStatus = OrderStatus.HANG_UP;
+        this.desc = desc;
     }
 
 }

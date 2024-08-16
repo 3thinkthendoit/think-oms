@@ -29,7 +29,7 @@ public class OrderPLUtil {
                 .updateTime(new Date())
                 .externalOrderNo(aggregate.getOrderId().getExternalOrderNo())
                 .orderNo(aggregate.getOrderId().getOrderNo())
-                .orderPrice(aggregate.getOrderPrice())
+                .orderPrice(aggregate.getOrderPay().getPayAmount())
                 .orderTitle(aggregate.getOrderTitle())
                 .build();
         return order;
@@ -66,7 +66,7 @@ public class OrderPLUtil {
         //skuItem po 转 domain
         skuItemInfos.forEach(item->{
             Map<FeeType,Long> feeAmountInfos = Maps.newHashMap();
-            skuItems.add(new OrderSkuItem(item.getSkuId(),item.getSkuCode(),item.getSkuAmount(),item.getPayPrice(),feeAmountInfos));
+            skuItems.add(new OrderSkuItem(item.getSkuCode(),item.getSkuAmount(),item.getPayPrice(),feeAmountInfos));
         });
         return OrderCreateAggregate.create(command,skuItems);
     }

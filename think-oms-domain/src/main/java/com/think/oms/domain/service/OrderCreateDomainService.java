@@ -6,9 +6,11 @@ import com.think.oms.domain.model.aggregate.create.OrderCreateAggregate;
 import com.think.oms.domain.pl.SkuFullInfo;
 import com.think.oms.domain.pl.request.DeductInventoryRequest;
 import com.think.oms.domain.pl.request.OrderQueryRequest;
+import com.think.oms.domain.pl.request.RiskCheckRequest;
 import com.think.oms.domain.pl.request.SkuInfoQueryRequest;
 import com.think.oms.domain.pl.response.DeductInventoryResponse;
 import com.think.oms.domain.pl.response.OrderQueryResponse;
+import com.think.oms.domain.pl.response.RiskCheckResponse;
 import com.think.oms.domain.pl.response.SkuInfoQueryResponse;
 import com.think.oms.domain.port.gateway.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +31,7 @@ public class OrderCreateDomainService {
     @Autowired
     SkuInfoQueryGateway skuInfoQueryGateway;
     @Autowired
-    InventoryGateway inventoryGateway;
+    RiskCheckGateway riskCheckGateway;
 
     /**
      * 判断订单是存在
@@ -116,6 +118,16 @@ public class OrderCreateDomainService {
      * 风控处理
      */
     private void riskCheck(OrderCreateAggregate aggregate){
-
+        RiskCheckRequest request = RiskCheckRequest.builder()
+                .address(aggregate.getShippingAddress().getAddress())
+                .phoneNo(aggregate.getShippingAddress().getContactInfo())
+                //.skuInfos()
+                .build();
+        RiskCheckResponse response  = riskCheckGateway.check(request);
+        if(response.isIllegalAddress() || response.isIllegalPay()
+                || response.isIllegalSkuPrice() || response.isBatchBuy()){
+            //自动神格不通过，挂起订单
+            aggregate.hangup(response.getDesc());
+        }
     }
 }

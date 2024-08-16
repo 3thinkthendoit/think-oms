@@ -56,6 +56,7 @@ public class OrderAppService {
         orderCreateDomainService.initBaseInfo(aggregate);
         orderCreateDomainService.audit(aggregate);
         aggregate.priceCalculate();
+        aggregate.priorityProcessing();
         orderRepository.save(aggregate);
         orderEventPublisher.publish(new OrderCreatedEvent(aggregate.getOrderId().getOrderNo()));
     }
