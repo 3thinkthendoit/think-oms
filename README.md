@@ -67,9 +67,10 @@
 ## 创建订单代码模型图
 ![diagram-14049767362457485694](https://github.com/user-attachments/assets/501036d6-2df1-47a9-a88c-b0058b98fc40)
 
-### DDD分层代码调用时序图
+### DDD分层代码调用时序图(订单接入)
 
-![diagram-5973189397319537185](https://github.com/user-attachments/assets/22f72db8-a858-4648-a3b3-0e34e7fbaedb)
+![企业微信截图_17237995107136](https://github.com/user-attachments/assets/a7a5eb7c-4848-42b6-a399-8bdcc6d39336)
+
 
 
 
