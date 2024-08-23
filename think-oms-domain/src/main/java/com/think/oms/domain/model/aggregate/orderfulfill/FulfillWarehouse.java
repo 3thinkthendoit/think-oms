@@ -17,6 +17,11 @@ public class FulfillWarehouse {
     private String areaCode;
 
     /**
+     * 与收货地址距离
+     */
+    private Double distance;
+
+    /**
      * 仓库发货处理水平
      */
     private Integer shippingLevel;
