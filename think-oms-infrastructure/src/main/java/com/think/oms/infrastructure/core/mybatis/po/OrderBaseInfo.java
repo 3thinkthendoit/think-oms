@@ -23,8 +23,12 @@ public class OrderBaseInfo {
     @TableField(value = "orderNo")
     private String orderNo;
 
+
     @TableField(value = "external_order_no")
     private String externalOrderNo;
+
+    @TableField(value = "store_code")
+    private String storeCode;
 
     @TableField(value = "order_title")
     private String orderTitle;

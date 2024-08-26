@@ -12,10 +12,6 @@ import java.util.List;
 @Builder
 public class SkuFullInfo {
 
-    /**
-     * skuId
-     */
-    private String skuId;
 
     /**
      * 外部SKU ID
@@ -60,11 +56,14 @@ public class SkuFullInfo {
     private List<SkuFullInfo> subSkuInfos;
 
 
+    public SkuFullInfo(String skuCode){
+        this.skuCode = skuCode;
+    }
+
     //其他商品信息 需要自己补充
 
     public void validate(){
         //sku 属性判断
-        Assert.isNull(skuId,"skuId is null!!!!");
         Assert.isNull(externalSkuId,"externalSkuId is null!!!!");
         Assert.isNull(skuCode,"skuCode is null!!!!");
         Assert.isNull(externalSkuCode,"externalSkuCode is null!!!!");

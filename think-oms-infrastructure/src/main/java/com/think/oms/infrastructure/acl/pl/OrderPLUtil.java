@@ -3,8 +3,11 @@ package com.think.oms.infrastructure.acl.pl;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.think.oms.domain.model.aggregate.create.OrderCreateAggregate;
+import com.think.oms.domain.model.aggregate.orderfulfill.OrderFulfillAggregate;
 import com.think.oms.domain.model.constant.FeeType;
 import com.think.oms.domain.model.aggregate.create.OrderSkuItem;
+import com.think.oms.domain.pl.SkuFullInfo;
+import com.think.oms.domain.pl.SkuItemInfo;
 import com.think.oms.domain.pl.command.OrderCreateCommand;
 import com.think.oms.infrastructure.core.mybatis.po.OrderBaseInfo;
 import com.think.oms.infrastructure.core.mybatis.po.OrderSkuInfo;
@@ -55,19 +58,15 @@ public class OrderPLUtil {
         return list;
     }
 
-    public static OrderCreateAggregate plToOrderDo(OrderBaseInfo orderBaseInfo, List<OrderSkuInfo> orderSkuInfos,
-                                                   List<OrderSkuItemInfo> skuItemInfos){
-        OrderCreateCommand command = OrderCreateCommand.builder()
-                .orderPrice(orderBaseInfo.getOrderPrice())
-                .orderTitle(orderBaseInfo.getOrderTitle())
-                //后续属性 自行还原
-                .build();
-        List<OrderSkuItem> skuItems = Lists.newArrayList();
-        //skuItem po 转 domain
-        skuItemInfos.forEach(item->{
-            Map<FeeType,Long> feeAmountInfos = Maps.newHashMap();
-            skuItems.add(new OrderSkuItem(item.getSkuCode(),item.getSkuAmount(),item.getPayPrice(),feeAmountInfos));
+    public static OrderFulfillAggregate plToOrderDo(OrderBaseInfo orderBaseInfo, List<OrderSkuItemInfo> orderSkuItemInfos){
+        List<SkuItemInfo> skuItemInfos = Lists.newArrayList();
+        //OrderSkuItemInfo po 转 SkuItemInfo
+        orderSkuItemInfos.forEach(item->{
+             SkuItemInfo skuItemInfo = new SkuItemInfo();
+             //赋值 自行补充其他属性
+            skuItemInfo.setSkuFullInfo(new SkuFullInfo(item.getSkuCode()));
+            skuItemInfos.add(skuItemInfo);
         });
-        return OrderCreateAggregate.create(command,skuItems);
+        return  new OrderFulfillAggregate(orderBaseInfo.getOrderNo(),orderBaseInfo.getStoreCode(),skuItemInfos);
     }
 }

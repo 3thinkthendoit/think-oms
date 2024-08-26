@@ -1,6 +1,7 @@
 package com.think.oms.app.service;
 
 import com.think.oms.domain.model.aggregate.create.OrderCreateAggregate;
+import com.think.oms.domain.model.aggregate.orderfulfill.OrderFulfillAggregate;
 import com.think.oms.domain.model.aggregate.shippingcallback.ShippingCallbackAggregate;
 import com.think.oms.domain.model.constant.OrderSource;
 import com.think.oms.domain.pl.OrderInfo;
@@ -18,6 +19,7 @@ import com.think.oms.domain.port.publisher.OrderEventPublisher;
 import com.think.oms.domain.port.repository.OrderRepository;
 import com.think.oms.domain.service.OrderCreateDomainService;
 import com.think.oms.domain.service.OrderFulfillDomainService;
+import com.think.oms.domain.service.OrderShippingDomainService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -40,11 +42,9 @@ public class OrderAppService {
     @Autowired
     OrderFulfillDomainService orderFulfillDomainService;
     @Autowired
+    OrderShippingDomainService orderShippingDomainService;
+    @Autowired
     OrderInfoGateway orderInfoGateway;
-    @Autowired
-    OfcGateway ofcGateway;
-    @Autowired
-    InvoiceGateway invoiceGateway;
 
     /**
      * 统一创建订单(流程编排-低耦合)
@@ -62,25 +62,14 @@ public class OrderAppService {
     }
 
     /**
-     * 订单创建后续逻辑
-     * 没有数据变更的可以绕过领域逻辑调用南向网关
+     * 订单履约
      * @param orderNo
      */
-    public void doHandleAfterOrderBeCreated(String orderNo){
-        OrderQueryRequest request = OrderQueryRequest
-                .builder()
-                .orderNo(orderNo)
-                .build();
-        List<OrderInfo> orders = orderInfoGateway.query(request).getOrders();
-        if(CollectionUtils.isEmpty(orders)){
-            return;
-        }
-        //通知订单分仓
-        ofcGateway.fulfill(orderNo);
-        //通知开发票
-        invoiceGateway.issue(orderNo);
-        //通知olap服务
-        //通知结算
+    public void fulfillOrder(String orderNo){
+        OrderFulfillAggregate aggregate = orderRepository.ofByOrderId(orderNo);
+        aggregate.dispatch();
+        aggregate.split();
+
     }
 
     /**
@@ -89,9 +78,9 @@ public class OrderAppService {
      */
     public void shippingCallback(OrderFulfillCommand command){
         ShippingCallbackAggregate aggregate = ShippingCallbackAggregate.create(command);
-        orderFulfillDomainService.initBaseInfo(aggregate);
+        orderShippingDomainService.initBaseInfo(aggregate);
         aggregate.check();
-        orderFulfillDomainService.shippingCallback(aggregate);
+        orderShippingDomainService.shippingCallback(aggregate);
         orderRepository.update(aggregate);
         orderEventPublisher.publish(new OrderUpdatedEvent(aggregate));
     }

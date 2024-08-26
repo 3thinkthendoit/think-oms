@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.google.common.collect.Lists;
 import com.think.oms.domain.model.aggregate.create.OrderCreateAggregate;
+import com.think.oms.domain.model.aggregate.orderfulfill.OrderFulfillAggregate;
 import com.think.oms.domain.model.aggregate.shippingcallback.ShippingCallbackAggregate;
 import com.think.oms.domain.model.dp.OrderId;
 import com.think.oms.domain.port.repository.OrderRepository;
@@ -51,21 +52,20 @@ public class OrderRepositoryImpl implements OrderRepository {
     }
 
     /**
-     * 还原订单聚合根
-     * @param orderId
+     * 还原履约订单聚合根
+     * @param orderNo
      * @return
      */
     @Override
-    public OrderCreateAggregate ofByOrderId(OrderId orderId) {
+    public OrderFulfillAggregate ofByOrderId(String orderNo) {
+        Assert.notNull(orderNo,"orderNo is null!!!");
         LambdaQueryWrapper<OrderBaseInfo> queryWrapper = Wrappers.lambdaQuery();
-        queryWrapper.eq(OrderBaseInfo::getOrderNo,orderId.getOrderNo());
+        queryWrapper.eq(OrderBaseInfo::getOrderNo,orderNo);
         List<OrderBaseInfo> orderList =  orderInfoMapper.selectList(queryWrapper);
-        Assert.isTrue(!CollectionUtils.isEmpty(orderList),String.format("根据orderNo=[{}]查询不到订单信息!!!",orderId.getOrderNo()));
-        //按业务需要查询orderSku
-        List<OrderSkuInfo> orderSkuInfoList = Lists.newArrayList();
+        Assert.isTrue(!CollectionUtils.isEmpty(orderList),String.format("根据orderNo=[{}]查询不到订单信息!!!",orderNo));
         //按业务需要查询orderSkuItem
         List<OrderSkuItemInfo> orderSkuItemInfoList = Lists.newArrayList();
-        return OrderPLUtil.plToOrderDo(orderList.get(0),orderSkuInfoList,orderSkuItemInfoList);
+        return OrderPLUtil.plToOrderDo(orderList.get(0),orderSkuItemInfoList);
     }
 
     /**

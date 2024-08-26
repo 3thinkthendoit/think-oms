@@ -1,6 +1,9 @@
 package com.think.oms.domain.model.aggregate.orderfulfill;
 
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.think.oms.domain.model.aggregate.create.OrderSkuItem;
+import com.think.oms.domain.pl.SkuItemInfo;
 import lombok.Getter;
 import org.springframework.util.CollectionUtils;
 
@@ -49,14 +52,24 @@ public class OrderFulfillAggregate {
     /**
      * 拆单拆单结果
      */
-    private Map<String, FulfillSkuItem> splitOrders;
+    private Map<String,List<OrderSplitResult>> splitOrders;
 
 
-    public OrderFulfillAggregate(String orderNo,String storeCode,List<FulfillSkuItem> fulfillSkuItems){
-        //初始化校验
-        this.fulfillSkuItems = fulfillSkuItems;
+    /**
+     * 工厂创建或者构造函数都可以
+     * @param orderNo
+     * @param storeCode
+     * @param skuItemInfos
+     */
+    public OrderFulfillAggregate(String orderNo,String storeCode,List<SkuItemInfo> skuItemInfos){
+        //初始化校验 这里省略
+        this.fulfillSkuItems = Lists.newArrayList();
+        skuItemInfos.forEach(skuItemInfo -> {
+            fulfillSkuItems.add(new FulfillSkuItem(skuItemInfo));
+        });
         this.orderNo = orderNo;
         this.storeCode = storeCode;
+        this.splitOrders = Maps.newHashMap();
     }
 
     /**
@@ -99,11 +112,28 @@ public class OrderFulfillAggregate {
 
     }
 
+    private String makeParentOrderNo(){
+        return "10"+System.currentTimeMillis();
+    }
+
     /**
-     * 拆单
+     * 根据分仓结果拆单
      */
     public void split(){
-
+        this.fulfillSkuItems.forEach(skuItem -> {
+            skuItem.getDispatchInfo().forEach((warehouseCode,skuAmount)->{
+                List<OrderSplitResult> splitResults = this.splitOrders.get(warehouseCode);
+                String parentOrderNo = this.makeParentOrderNo();
+                if(CollectionUtils.isEmpty(splitResults)){
+                    splitResults = Lists.newArrayList();
+                    this.splitOrders.put(warehouseCode,splitResults);
+                }else {
+                    orderNo = splitResults.get(0).getParentOrderNo();
+                }
+                splitResults.add(new OrderSplitResult(this.orderNo,parentOrderNo,skuItem.getSkuCode(),
+                        skuAmount,warehouseCode));
+            });
+        });
     }
 
 }
