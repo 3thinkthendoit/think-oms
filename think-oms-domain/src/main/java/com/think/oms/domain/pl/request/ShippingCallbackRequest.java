@@ -22,11 +22,13 @@ public class ShippingCallbackRequest {
 
         private String externalSkuCode;
 
-        private String externalSkuId;
-
         private Integer skuAmount;
 
         private Integer ShippingAmount;
+
+        private String expressCode;
+
+        private String expressNo;
     }
 
 }

@@ -4,26 +4,29 @@ import com.think.oms.domain.model.aggregate.create.OrderCreateAggregate;
 import com.think.oms.domain.model.aggregate.orderfulfill.OrderFulfillAggregate;
 import com.think.oms.domain.model.aggregate.shippingcallback.ShippingCallbackAggregate;
 import com.think.oms.domain.model.constant.OrderSource;
+import com.think.oms.domain.pl.FulfillOrderInfo;
 import com.think.oms.domain.pl.OrderInfo;
 import com.think.oms.domain.pl.command.OrderAssCommand;
 import com.think.oms.domain.pl.command.OrderCreateCommand;
 import com.think.oms.domain.pl.command.OrderFulfillCommand;
 import com.think.oms.domain.pl.event.OrderCreatedEvent;
-import com.think.oms.domain.pl.event.OrderUpdatedEvent;
+import com.think.oms.domain.pl.event.OrderFulfillEvent;
 import com.think.oms.domain.pl.query.OrderInfoQuery;
+import com.think.oms.domain.pl.request.OrderFulfillRequest;
 import com.think.oms.domain.pl.request.OrderQueryRequest;
-import com.think.oms.domain.port.gateway.InvoiceGateway;
-import com.think.oms.domain.port.gateway.OfcGateway;
+import com.think.oms.domain.pl.response.OrderFulfillResponse;
+import com.think.oms.domain.port.gateway.OrderFulfillGateway;
 import com.think.oms.domain.port.gateway.OrderInfoGateway;
 import com.think.oms.domain.port.publisher.OrderEventPublisher;
-import com.think.oms.domain.port.repository.OrderRepository;
+import com.think.oms.domain.port.repository.OrderCreateRepository;
+import com.think.oms.domain.port.repository.OrderFulfillRepository;
+import com.think.oms.domain.port.repository.SkuShippingRepository;
 import com.think.oms.domain.service.OrderCreateDomainService;
 import com.think.oms.domain.service.OrderFulfillDomainService;
 import com.think.oms.domain.service.OrderShippingDomainService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
 import java.util.List;
 
 /**
@@ -36,7 +39,9 @@ public class OrderAppService {
     @Autowired
     OrderCreateDomainService orderCreateDomainService;
     @Autowired
-    OrderRepository orderRepository;
+    OrderCreateRepository orderCreateRepository;
+    @Autowired
+    OrderFulfillRepository orderFulfillRepository;
     @Autowired
     OrderEventPublisher orderEventPublisher;
     @Autowired
@@ -45,6 +50,10 @@ public class OrderAppService {
     OrderShippingDomainService orderShippingDomainService;
     @Autowired
     OrderInfoGateway orderInfoGateway;
+    @Autowired
+    OrderFulfillGateway orderFulfillGateway;
+    @Autowired
+    SkuShippingRepository shippingRepository;
 
     /**
      * 统一创建订单(流程编排-低耦合)
@@ -57,19 +66,41 @@ public class OrderAppService {
         orderCreateDomainService.audit(aggregate);
         aggregate.priceCalculate();
         aggregate.priorityProcessing();
-        orderRepository.save(aggregate);
+        orderCreateRepository.save(aggregate);
         orderEventPublisher.publish(new OrderCreatedEvent(aggregate.getOrderId().getOrderNo()));
     }
 
     /**
-     * 订单履约
+     * 订单分仓、拆单
+     * @param orderNo
+     */
+    public void dispatchOrder(String orderNo){
+        OrderFulfillAggregate aggregate = orderFulfillRepository.ofByOrderNo(orderNo);
+        orderFulfillDomainService.initBaseInfo(aggregate);
+        aggregate.check();
+        aggregate.dispatch();
+        aggregate.split();
+        orderFulfillRepository.save(aggregate);
+        orderEventPublisher.publish(new OrderFulfillEvent(orderNo));
+    }
+
+    /**
+     * 推WMS履约(可做业务补偿)
+     * 业务逻辑比较薄，可以直接绕过领域层逻辑直接操作南向网关
      * @param orderNo
      */
     public void fulfillOrder(String orderNo){
-        OrderFulfillAggregate aggregate = orderRepository.ofByOrderId(orderNo);
-        aggregate.dispatch();
-        aggregate.split();
-
+        List<FulfillOrderInfo> list = orderFulfillRepository.queryFulfillOrderInfos(orderNo);
+        list.forEach(order->{
+            OrderFulfillRequest request = OrderFulfillRequest.builder()
+                    .warehouseCode(order.getWarehouseCode())
+                    .omsOrderNo(order.getOmsOrderNo())
+                    .build();
+            OrderFulfillResponse response =  orderFulfillGateway.fulfill(request);
+            if(response.isFulfill()){
+                orderFulfillRepository.updateOrderFulfill(order.getOmsOrderNo());
+            }
+        });
     }
 
     /**
@@ -80,14 +111,13 @@ public class OrderAppService {
         ShippingCallbackAggregate aggregate = ShippingCallbackAggregate.create(command);
         orderShippingDomainService.initBaseInfo(aggregate);
         aggregate.check();
+        shippingRepository.save(aggregate);
         orderShippingDomainService.shippingCallback(aggregate);
-        orderRepository.update(aggregate);
-        orderEventPublisher.publish(new OrderUpdatedEvent(aggregate));
     }
 
 
     /**
-     * 订单售后处理
+     * 订单售后
      * @param command
      */
     public void orderAfterSaleService(OrderAssCommand command){

@@ -1,23 +1,35 @@
 package com.think.oms.domain.service;
 
-import com.alibaba.fastjson.JSONObject;
-import com.think.oms.domain.model.aggregate.shippingcallback.ShippingCallbackAggregate;
-import com.think.oms.domain.pl.request.OfcOrderQueryRequest;
-import com.think.oms.domain.pl.request.OrderQueryRequest;
-import com.think.oms.domain.pl.request.ShippingCallbackRequest;
-import com.think.oms.domain.pl.response.OfcOrderQueryResponse;
-import com.think.oms.domain.pl.response.OrderQueryResponse;
-import com.think.oms.domain.pl.response.ShippingCallbackResponse;
-import com.think.oms.domain.port.gateway.OfcGateway;
-import com.think.oms.domain.port.gateway.OrderInfoGateway;
-import com.think.oms.domain.port.gateway.ShippingCallbackGateway;
+import com.think.oms.domain.model.aggregate.orderfulfill.OrderFulfillAggregate;
+import com.think.oms.domain.pl.WarehouseInfo;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
+import java.util.List;
+import java.util.Map;
 
 @Service
 @Slf4j
 public class OrderFulfillDomainService {
 
+    public void initBaseInfo(OrderFulfillAggregate aggregate){
+        List<WarehouseInfo> warehouseInfos = getSkuWarehouseInfo(aggregate);
+        Map<String,String> skuWarehouseMappingMap = getSkuWarehouseMapping(aggregate);
+        Map<String,String> storeWarehouseMappingMap = getSkuStoreMapping(aggregate);
+        aggregate.initBaseInfo(warehouseInfos,skuWarehouseMappingMap,storeWarehouseMappingMap);
+    }
+
+    private List<WarehouseInfo> getSkuWarehouseInfo(OrderFulfillAggregate aggregate){
+        // call acl
+        return null;
+    }
+
+    private Map<String,String> getSkuWarehouseMapping(OrderFulfillAggregate aggregate){
+        // call acl
+        return null;
+    }
+
+    private Map<String,String> getSkuStoreMapping(OrderFulfillAggregate aggregate){
+        // call acl
+        return null;
+    }
 }

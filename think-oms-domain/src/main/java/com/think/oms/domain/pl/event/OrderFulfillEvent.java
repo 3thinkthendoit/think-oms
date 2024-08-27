@@ -4,10 +4,10 @@ import com.think.oms.domain.model.aggregate.shippingcallback.ShippingCallbackAgg
 import lombok.Data;
 
 @Data
-public class OrderUpdatedEvent extends OrderOperationEvent{
+public class OrderFulfillEvent extends OrderOperationEvent{
 
-    public OrderUpdatedEvent(ShippingCallbackAggregate aggregate){
-        this.setOrderNo(aggregate.getOrderId().getOrderNo());
+    public OrderFulfillEvent(String orderNo){
+        this.setOrderNo(orderNo);
         this.setPublishType(PublishType.LOCAL);
     }
 }

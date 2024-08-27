@@ -22,6 +22,10 @@ public class OrderCreatedListener  {
     @Async
     public void onApplicationEvent(OrderCreatedEvent event) {
         log.info("收到OrderCreatedEvent :orderNo=[{}]",event.getOrderNo());
-        orderAppService.doHandleAfterOrderBeCreated(event.getOrderNo());
+        try {
+            orderAppService.dispatchOrder(event.getOrderNo());
+        }catch (Exception ex){
+            log.error(ex.getMessage(),ex);
+        }
     }
 }

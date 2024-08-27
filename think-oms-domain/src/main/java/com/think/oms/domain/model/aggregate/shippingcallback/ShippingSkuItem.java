@@ -8,22 +8,22 @@ public class ShippingSkuItem {
     /**
      * skuId
      */
-    private String skuId;
+    private String skuCode;
 
     /**
-     * 外部skuId
+     * 外部skuCode
      */
-    private String externalSkuId;
+    private String externalSkuCode;
 
-//    /**
-//     * skuCode
-//     */
-//    private String skuCode;
-//
-//    /**
-//     * 外部skuCode
-//     */
-//    private String externalSkuCode;
+    /**
+     * 快递公司编码
+     */
+    private String expressCode;
+
+    /**
+     * 发货单号
+     */
+    private String expressNo;
 
     /**
      * sku数量
@@ -45,11 +45,17 @@ public class ShippingSkuItem {
         this.shippingAmount += shippingAmount;
     }
 
-    public ShippingSkuItem(String skuId,String externalSkuId,Integer skuAmount){
-        this.skuId = skuId;
-        this.externalSkuId = externalSkuId;
+    public ShippingSkuItem(String skuCode,String externalSkuCode,Integer skuAmount){
+        this.skuCode = skuCode;
+        this.externalSkuCode = externalSkuCode;
         this.skuAmount = skuAmount;
         this.shippingAmount = 0;
+    }
+
+    public void modify(String expressCode,String expressNo,Integer shippingAmount){
+        this.expressCode = expressCode;
+        this.expressNo = expressNo;
+        this.shippingAmount = shippingAmount;
     }
 
 }

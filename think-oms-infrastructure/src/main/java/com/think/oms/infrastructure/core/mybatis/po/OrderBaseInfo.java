@@ -11,12 +11,13 @@ import lombok.NoArgsConstructor;
 
 import java.util.Date;
 
-@TableName("oms_order_base_info")
+@TableName("order_base_info")
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class OrderBaseInfo {
+
     @TableId(value = "id", type = IdType.AUTO)
     private Long id;
 
@@ -44,5 +45,8 @@ public class OrderBaseInfo {
 
     @TableField(value = "update_time")
     private Date updateTime;
+
+    @TableField(value = "order_status")
+    private Integer orderStatus;
 
 }

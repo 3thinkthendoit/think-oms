@@ -2,13 +2,13 @@ package com.think.oms.domain.service;
 
 import com.alibaba.fastjson.JSONObject;
 import com.think.oms.domain.model.aggregate.shippingcallback.ShippingCallbackAggregate;
-import com.think.oms.domain.pl.request.OfcOrderQueryRequest;
 import com.think.oms.domain.pl.request.OrderQueryRequest;
 import com.think.oms.domain.pl.request.ShippingCallbackRequest;
-import com.think.oms.domain.pl.response.OfcOrderQueryResponse;
+import com.think.oms.domain.pl.request.ShippingQueryRequest;
 import com.think.oms.domain.pl.response.OrderQueryResponse;
 import com.think.oms.domain.pl.response.ShippingCallbackResponse;
-import com.think.oms.domain.port.gateway.OfcGateway;
+import com.think.oms.domain.pl.response.ShippingQueryResponse;
+import com.think.oms.domain.port.gateway.OrderFulfillGateway;
 import com.think.oms.domain.port.gateway.OrderInfoGateway;
 import com.think.oms.domain.port.gateway.ShippingCallbackGateway;
 import lombok.extern.slf4j.Slf4j;
@@ -23,9 +23,9 @@ public class OrderShippingDomainService {
     @Autowired
     OrderInfoGateway orderInfoGateway;
     @Autowired
-    OfcGateway ofcGateway;
-    @Autowired
     ShippingCallbackGateway shippingCallbackGateway;
+    @Autowired
+    OrderFulfillGateway orderFulfillGateway;
 
     public void initBaseInfo(ShippingCallbackAggregate aggregate){
         this.initOrderInfo(aggregate);
@@ -53,19 +53,10 @@ public class OrderShippingDomainService {
      * @param aggregate
      */
     private void initSkuShippingInfo(ShippingCallbackAggregate aggregate){
-        OfcOrderQueryRequest request = OfcOrderQueryRequest.builder()
-                .orderNo(aggregate.getOrderId().getOrderNo())
-                .build();
-        OfcOrderQueryResponse response = ofcGateway.query(request);
-        if(CollectionUtils.isEmpty(response.getOfcOrders())){
-            return;
-        }
-        response.getOfcOrders().forEach(ofcOrder -> {
-            ofcOrder.getShippingItems().forEach(item->{
-                aggregate.modifyShippingAmount(item.getSkuId(),item.getShippingAmount());
-            });
-        });
-
+        //调用WMS网关获取发货信息
+        ShippingQueryRequest request = ShippingQueryRequest.builder().build();
+        ShippingQueryResponse response  = orderFulfillGateway.query(request);
+        //aggregate.modifyShippingInfo();
     }
 
     /**

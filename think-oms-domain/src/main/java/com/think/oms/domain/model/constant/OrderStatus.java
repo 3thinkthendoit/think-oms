@@ -4,10 +4,11 @@ import lombok.Getter;
 
 @Getter
 public enum OrderStatus {
-    UN_PAY(1,"未支付"),
+    UN_PAY(-1,"未支付"),
     PAYED(1,"已支付"),
     CANCEL(2,"取消"),
-    HANG_UP(3,"挂起");
+    FULFILLED(3,"已发货"),
+    HANG_UP(4,"挂起");
 
     private int code;
     private String desc;

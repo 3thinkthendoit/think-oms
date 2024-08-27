@@ -5,9 +5,5 @@ import lombok.Data;
 
 @Data
 @Builder
-public class OfcOrderQueryRequest {
-
-    private String orderNo;
-
-    private String ofcOrderNo;
+public class ShippingQueryRequest {
 }

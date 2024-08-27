@@ -6,10 +6,14 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@TableName("order_sku")
+@TableName("oms_order_info")
 @Data
 @Builder
 @AllArgsConstructor
-public class OrderSkuInfo {
+@NoArgsConstructor
+public class OmsOrderInfo {
 
+    private String omsOrderNo;
+
+    private String orderNo;
 }

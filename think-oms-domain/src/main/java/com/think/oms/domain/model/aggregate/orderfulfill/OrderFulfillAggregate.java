@@ -2,11 +2,10 @@ package com.think.oms.domain.model.aggregate.orderfulfill;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import com.think.oms.domain.model.aggregate.create.OrderSkuItem;
 import com.think.oms.domain.pl.SkuItemInfo;
+import com.think.oms.domain.pl.WarehouseInfo;
 import lombok.Getter;
 import org.springframework.util.CollectionUtils;
-
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -70,6 +69,28 @@ public class OrderFulfillAggregate {
         this.orderNo = orderNo;
         this.storeCode = storeCode;
         this.splitOrders = Maps.newHashMap();
+        this.fulfillWarehouses = Lists.newArrayList();
+        this.skuMappingWarehouseMap = Maps.newHashMap();
+        this.storeMappingWarehouseMap = Maps.newHashMap();
+    }
+
+    public void initBaseInfo(List<WarehouseInfo> warehouseInfos, Map<String,String> skuMappingWarehouseMap,
+                     Map<String,String> storeMappingWarehouseMap){
+        //check
+        this.skuMappingWarehouseMap = skuMappingWarehouseMap;
+        this.storeMappingWarehouseMap = storeMappingWarehouseMap;
+        warehouseInfos.forEach(warehouseInfo -> {
+            this.fulfillWarehouses.add(new FulfillWarehouse(warehouseInfo.getWarehouseCode(),warehouseInfo.getAreaCode(),
+                    warehouseInfo.getInventoryMap()));
+        });
+
+    }
+
+    /**
+     * 业务检查
+     */
+    public void check(){
+
     }
 
     /**
@@ -112,6 +133,10 @@ public class OrderFulfillAggregate {
 
     }
 
+    /**
+     * 获取父订单号
+     * @return
+     */
     private String makeParentOrderNo(){
         return "10"+System.currentTimeMillis();
     }

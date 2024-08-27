@@ -63,20 +63,20 @@ public class ShippingCallbackAggregate {
         }
         skuItemInfos.forEach(skuItemInfo -> {
             //SkuItemInfo 转 ShippingSkuItem
-            orderSkuItems.put(skuItemInfo.getSkuFullInfo().getSkuId(),
-                    new ShippingSkuItem(skuItemInfo.getSkuFullInfo().getSkuId(),skuItemInfo.getSkuFullInfo().getExternalSkuId(),
+            orderSkuItems.put(skuItemInfo.getSkuFullInfo().getSkuCode(),
+                    new ShippingSkuItem(skuItemInfo.getSkuFullInfo().getSkuCode(),skuItemInfo.getSkuFullInfo().getExternalSkuId(),
                     skuItemInfo.getSkuAmount()));
         });
     }
 
     /**
-     * 更新发货数量
-     * @param skuId
+     * 新发货信息
+     * @param skuCode
      * @param shippingAmount
      */
-    public void modifyShippingAmount(String skuId,Integer shippingAmount){
-        ShippingSkuItem shippingSkuItem  = orderSkuItems.get(skuId);
-        Assert.notNull(shippingSkuItem,String.format("ofc skuId=%s 无法匹配订单skuId!!!",skuId));
+    public void modifyShippingInfo(String skuCode,Integer shippingAmount,String expressCode,String expressNo){
+        ShippingSkuItem shippingSkuItem  = orderSkuItems.get(skuCode);
+        Assert.notNull(shippingSkuItem,String.format("ofc skuCode=%s 无法匹配订单skuCode!!!",skuCode));
         shippingSkuItem.modifyShippingAmount(shippingAmount);
     }
 
