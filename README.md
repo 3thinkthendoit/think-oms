@@ -49,7 +49,8 @@
 
 #### 领域模型
 
-![企业微信截图_1721810362293](https://github.com/user-attachments/assets/65722a4a-493a-4bec-bf46-bd7384da73ed)
+![企业微信截图_17247515366952](https://github.com/user-attachments/assets/3bbe323a-f3cc-4b06-bee8-7adc78fd1df8)
+
 
 #### 领域划分
 
@@ -251,22 +252,22 @@ orderInfo.hangup();
 
 ### 流程编排(低耦合)
 ```Java
- //创建订单聚合
- OrderCreateAggregate aggregate = OrderCreateAggregate.create(command);
- //检验订单是否存在
- orderCreateDomainService.isExist(aggregate);
- //通过domian service 与外部商品域、用户域、基本信息域完成协作(高内聚)
- orderCreateDomainService.initBaseInfo(aggregate);
- //订单接入检查,调用聚合的领域方法
- aggregate.check();
- //订单金额拆分,调用聚合的领域方法
- aggregate.priceCalculate();
- //通过domian service 与库存域 完成库存扣减
- orderCreateDomainService.deductInventory(aggregate);
- //持久化聚合
- orderRepository.save(aggregate);
- //发布领域事件，通知订单创建成功
- orderEventPublisher.publish(new OrderCreatedEvent(aggregate.getOrderId().getOrderNo()));
+   //创建订单聚合
+   OrderCreateAggregate aggregate = OrderCreateAggregate.create(command);
+  //是否重复创建
+   orderCreateDomainService.isExist(aggregate);
+  //初始化聚合业务的必要信息
+   orderCreateDomainService.initBaseInfo(aggregate);
+  //订单风控审核
+   orderCreateDomainService.audit(aggregate);
+  //金额拆分
+   aggregate.priceCalculate();
+  //sku发货优先级处理
+   aggregate.priorityProcessing();
+  //新增订单
+   orderCreateRepository.save(aggregate);
+  //发布订单创建事件，通知履约集合 拆单、分厂
+   orderEventPublisher.publish(new OrderCreatedEvent(aggregate.getOrderId().getOrderNo()));
 ```
 ### 领域服务(与外部协作领域行为，不适合放在聚合)
 ```Java
@@ -291,82 +292,157 @@ public void deductInventory(OrderCreateAggregate aggregate){
 * 自给自足：操作自身属性进行业务逻辑
 * 互为协作：与别的对象进行协作
 ```Java
-/**
- * 订单履约聚合
- */
 @Getter
 public class OrderFulfillAggregate {
 
-    private OrderId orderId;
-
-    private boolean callback;
-
-    private Map<String,ShippingSkuItem> orderSkuItems;
-
-    private ShippingCallbackRecord shippingCallbackRecord;
-
-    public static OrderFulfillAggregate create(OrderFulfillCommand command){
-        command.validate();
-        OrderFulfillAggregate aggregate = new OrderFulfillAggregate();
-        aggregate.orderId = new OrderId(command.getOrderNo());
-        aggregate.orderSkuItems = Maps.newHashMap();
-        return aggregate;
-    }
-
     /**
-     * 回传校验
+     * 订单号
      */
-    public void check(){
-        this.callback = false;
-        if(CollectionUtils.isEmpty(orderSkuItems)){
-            Assert.isTrue(false,String.format("根据orderNo=[%s]查询不到订单信息!!!",this.orderId.getOrderNo()));
-        }
-        if(OrderSource.DOU_YIN.getCode() == this.orderId.getOrderSource().getCode()){
-            //抖音平台无需发货回传
-            return;
-        }
-        this.orderSkuItems.forEach((k,v)->{
-            if(v.getSkuAmount() != 0){
-                this.callback = true;
-            }
-        });
-    }
+    private String orderNo;
 
     /**
-     * 初始sku信息
+     * 店铺编码
+     */
+    private String storeCode;
+
+    /**
+     * 订单下单skuItemMap
+     */
+    private List<FulfillSkuItem> fulfillSkuItems;
+
+
+    /**
+     * sku 仓库库存信息
+     */
+    private List<FulfillWarehouse> fulfillWarehouses;
+
+    /**
+     * SKU-仓库映射关系
+     */
+    private Map<String,String> skuMappingWarehouseMap;
+
+    /**
+     *店铺-仓库映射关系
+     */
+    private Map<String,String> storeMappingWarehouseMap;
+
+
+    /**
+     * 拆单拆单结果
+     */
+    private Map<String,List<OrderSplitResult>> splitOrders;
+
+
+    /**
+     * 工厂创建或者构造函数都可以
+     * @param orderNo
+     * @param storeCode
      * @param skuItemInfos
      */
-    public void initBaseInfo(List<SkuItemInfo> skuItemInfos){
-        if(CollectionUtils.isEmpty(skuItemInfos)){
+    public OrderFulfillAggregate(String orderNo,String storeCode,List<SkuItemInfo> skuItemInfos){
+        //初始化校验 这里省略
+        this.fulfillSkuItems = Lists.newArrayList();
+        skuItemInfos.forEach(skuItemInfo -> {
+            fulfillSkuItems.add(new FulfillSkuItem(skuItemInfo));
+        });
+        this.orderNo = orderNo;
+        this.storeCode = storeCode;
+        this.splitOrders = Maps.newHashMap();
+        this.fulfillWarehouses = Lists.newArrayList();
+        this.skuMappingWarehouseMap = Maps.newHashMap();
+        this.storeMappingWarehouseMap = Maps.newHashMap();
+    }
+
+    public void initBaseInfo(List<WarehouseInfo> warehouseInfos, Map<String,String> skuMappingWarehouseMap,
+                     Map<String,String> storeMappingWarehouseMap){
+        //check
+        this.skuMappingWarehouseMap = skuMappingWarehouseMap;
+        this.storeMappingWarehouseMap = storeMappingWarehouseMap;
+        warehouseInfos.forEach(warehouseInfo -> {
+            this.fulfillWarehouses.add(new FulfillWarehouse(warehouseInfo.getWarehouseCode(),warehouseInfo.getAreaCode(),
+                    warehouseInfo.getInventoryMap()));
+        });
+
+    }
+
+    /**
+     * 业务检查
+     */
+    public void check(){
+
+    }
+
+    /**
+     * 分仓
+     */
+    public void dispatch(){
+        this.fulfillSkuItems.forEach(this::doDispatch);
+    }
+
+    private void doDispatch(FulfillSkuItem skuItem) {
+        //1 店铺指定仓库发货
+        String warehouseCode = storeMappingWarehouseMap.get(this.storeCode);
+        if (!Objects.isNull(warehouseCode)) {
+            skuItem.dispatch(warehouseCode,skuItem.getShippingAmount());
             return;
         }
-        skuItemInfos.forEach(skuItemInfo -> {
-            //SkuItemInfo 转 ShippingSkuItem
-            orderSkuItems.put(skuItemInfo.getSkuFullInfo().getSkuId(),
-                    new ShippingSkuItem(skuItemInfo.getSkuFullInfo().getSkuId(),skuItemInfo.getSkuFullInfo().getExternalSkuId(),
-                    skuItemInfo.getSkuAmount()));
+        //2 sku指定了仓库发货
+        warehouseCode = skuMappingWarehouseMap.get(skuItem.getSkuCode());
+        if (!Objects.isNull(warehouseCode)) {
+            skuItem.dispatch(warehouseCode,skuItem.getShippingAmount());
+            return;
+        }
+        //3 地理位置就近原则+库存余量+仓库处理能力 权重计算
+        this.dispatchByOptimalWarehouse(skuItem);
+    }
+
+
+    /**
+     * 最优仓库选择
+     * @param skuItem
+     */
+    private void dispatchByOptimalWarehouse(FulfillSkuItem skuItem){
+        Map<String,Integer> dispatchMap = Maps.newHashMap();
+        this.fulfillWarehouses.forEach(warehouse->{
+               //dispatchMap
+        });
+        dispatchMap.forEach((warehouseCode,amount)->{
+            skuItem.dispatch(warehouseCode,amount);
+        });
+
+    }
+
+    /**
+     * 获取父订单号
+     * @return
+     */
+    private String makeParentOrderNo(){
+        return "10"+System.currentTimeMillis();
+    }
+
+    /**
+     * 根据分仓结果拆单
+     */
+    public void split(){
+        this.fulfillSkuItems.forEach(skuItem -> {
+            skuItem.getDispatchInfo().forEach((warehouseCode,skuAmount)->{
+                List<OrderSplitResult> splitResults = this.splitOrders.get(warehouseCode);
+                String parentOrderNo = this.makeParentOrderNo();
+                if(CollectionUtils.isEmpty(splitResults)){
+                    splitResults = Lists.newArrayList();
+                    this.splitOrders.put(warehouseCode,splitResults);
+                }else {
+                    orderNo = splitResults.get(0).getParentOrderNo();
+                }
+                splitResults.add(new OrderSplitResult(this.orderNo,parentOrderNo,skuItem.getSkuCode(),
+                        skuAmount,warehouseCode));
+            });
         });
     }
 
-    /**
-     * 更新发货数量
-     * @param skuId
-     * @param shippingAmount
-     */
-    public void modifyShippingAmount(String skuId,Integer shippingAmount){
-        ShippingSkuItem shippingSkuItem  = orderSkuItems.get(skuId);
-        Assert.notNull(shippingSkuItem,String.format("ofc skuId=%s 无法匹配订单skuId!!!",skuId));
-        shippingSkuItem.modifyShippingAmount(shippingAmount);
-    }
-
-    /**
-     * 创建发货回传记录
-     */
-    public void makeShippingCallbackRecord(Integer status,String callResult){
-        this.shippingCallbackRecord = new ShippingCallbackRecord(this.orderId.getOrderNo(),this.orderId.getExternalOrderNo(),
-                this.orderId.getOrderSource(), JSONObject.toJSONString(this.orderSkuItems),status,callResult);
-    }
 }
+    
+ 
 ```
 ### 值对象
 * 自我验证
@@ -491,42 +567,43 @@ aggregate.priceCalculate();
 
 接入订单聚合是设计成批量接入还是单次接入？如何取舍
 
-### DDD和数据一致性取舍和平衡
+### DDD如何处理 数据一致性（业务补偿）
 
-订单聚合持久化后，需要推送下游 结算、发票、发货等，是否在 订单流程编排中编排？调用外部服务超时如何处理
+订单分仓拆单 持久化后，
 
 通过领域事件解耦,可以做一致性数据补偿
 ```Java
     //订单创建成功发布领域事件
-    orderEventPublisher.publish(new OrderCreatedEvent(aggregate.getOrderId().getOrderNo()));
+    orderEventPublisher.publish(new OrderFulfillEvent(aggregate.getOrderId().getOrderNo()));
 
     //监听领域事件
-    @EventListener(value = OrderCreatedEvent.class)
+    @EventListener(value = OrderFulfillEvent.class)
     @Async
-    public void onApplicationEvent(OrderCreatedEvent event) {
-        log.info("收到OrderCreatedEvent :orderNo=[{}]",event.getOrderNo());
-        orderAppService.doHandleAfterOrderBeCreated(event.getOrderNo());
+    public void onApplicationEvent(OrderFulfillEvent event) {
+        log.info("OrderFulfilledEvent :orderNo=[{}]",event.getOrderNo());
+        try {
+            orderAppService.fulfillOrder(event.getOrderNo());
+        }catch (Exception ex){
+            log.error(ex.getMessage(),ex);
+        }
     }
 
-     /**
-     * 订单创建后续逻辑(可做数据一致性补偿)
-     * 
+    /**
+     * 推WMS履约(可做业务补偿)
+     * 业务逻辑比较薄，可以直接绕过领域层逻辑直接操作南向网关
      * @param orderNo
      */
-    public void doHandleAfterOrderBeCreated(String orderNo){
-        OrderQueryRequest request = OrderQueryRequest
-                .builder()
-                .orderNo(orderNo)
-                .build();
-        List<OrderInfo> orders = orderInfoGateway.query(request).getOrders();
-        if(CollectionUtils.isEmpty(orders)){
-            return;
-        }
-        //通知订单履约
-        ofcGateway.fulfill(orderNo);
-        //通知开发票
-        invoiceGateway.issue(orderNo);
-        //通知olap服务
-        //通知结算
+    public void fulfillOrder(String orderNo){
+        List<FulfillOrderInfo> list = orderFulfillRepository.queryFulfillOrderInfos(orderNo);
+        list.forEach(order->{
+            OrderFulfillRequest request = OrderFulfillRequest.builder()
+                    .warehouseCode(order.getWarehouseCode())
+                    .omsOrderNo(order.getOmsOrderNo())
+                    .build();
+            OrderFulfillResponse response =  orderFulfillGateway.fulfill(request);
+            if(response.isFulfill()){
+                orderFulfillRepository.updateOrderFulfill(order.getOmsOrderNo());
+            }
+        });
     }
 ```
