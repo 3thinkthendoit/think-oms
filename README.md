@@ -573,8 +573,14 @@ aggregate.priceCalculate();
 
 通过领域事件解耦,可以做一致性数据补偿
 ```Java
-    //订单创建成功发布领域事件
-    orderEventPublisher.publish(new OrderFulfillEvent(aggregate.getOrderId().getOrderNo()));
+    //订单分仓拆单后 发布领域事件
+     OrderFulfillAggregate aggregate = orderFulfillRepository.ofByOrderNo(orderNo);
+     orderFulfillDomainService.initBaseInfo(aggregate);
+     aggregate.check();
+     aggregate.dispatch();
+     aggregate.split();
+     orderFulfillRepository.save(aggregate);
+     orderEventPublisher.publish(new OrderFulfillEvent(orderNo));
 
     //监听领域事件
     @EventListener(value = OrderFulfillEvent.class)
