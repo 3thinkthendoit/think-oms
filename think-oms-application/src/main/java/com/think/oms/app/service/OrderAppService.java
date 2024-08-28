@@ -8,7 +8,7 @@ import com.think.oms.domain.pl.FulfillOrderInfo;
 import com.think.oms.domain.pl.OrderInfo;
 import com.think.oms.domain.pl.command.OrderAssCommand;
 import com.think.oms.domain.pl.command.OrderCreateCommand;
-import com.think.oms.domain.pl.command.OrderFulfillCommand;
+import com.think.oms.domain.pl.command.SkuShippingCommand;
 import com.think.oms.domain.pl.event.OrderCreatedEvent;
 import com.think.oms.domain.pl.event.OrderFulfillEvent;
 import com.think.oms.domain.pl.query.OrderInfoQuery;
@@ -107,7 +107,7 @@ public class OrderAppService {
      * 订单发货回传处理
      * @param command
      */
-    public void shippingCallback(OrderFulfillCommand command){
+    public void shippingCallback(SkuShippingCommand command){
         ShippingCallbackAggregate aggregate = ShippingCallbackAggregate.create(command);
         orderShippingDomainService.initBaseInfo(aggregate);
         aggregate.check();

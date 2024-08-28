@@ -2,7 +2,7 @@ package com.think.oms.ohs.mq;
 
 import com.alibaba.fastjson.JSONObject;
 import com.think.oms.app.service.OrderAppService;
-import com.think.oms.domain.pl.command.OrderFulfillCommand;
+import com.think.oms.domain.pl.command.SkuShippingCommand;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.rocketmq.spring.core.RocketMQListener;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 @Component
 @Slf4j
 //@RocketMQMessageListener(topic = "order-fulfillment-center", consumerGroup = "order-fulfillment-center-group")
-public class OfcConsumer implements RocketMQListener<String> {
+public class WmsConsumer implements RocketMQListener<String> {
 
     @Autowired
     OrderAppService orderAppService;
@@ -22,14 +22,13 @@ public class OfcConsumer implements RocketMQListener<String> {
     @Override
     public void onMessage(String msg) {
        try {
-           log.info("收到order-fulfillment-center 发货信息msg={}",msg);
+           log.info("收到wms 发货信息msg={}",msg);
            //解析msg
            JSONObject json = JSONObject.parseObject(msg);
-           OrderFulfillCommand command = OrderFulfillCommand.builder()
-                   .orderNo(json.getString("orderNo"))
-                   .ofcOrderNo(json.getString("ofcOrderNo"))
+           SkuShippingCommand command = SkuShippingCommand.builder()
+                   .wmsOrderNo(json.getString("orderNo"))
                    .build();
-           orderAppService.orderFulfill(command);
+           orderAppService.shippingCallback(command);
        }catch (Exception ex){
             log.error(ex.getMessage(),ex);
        }

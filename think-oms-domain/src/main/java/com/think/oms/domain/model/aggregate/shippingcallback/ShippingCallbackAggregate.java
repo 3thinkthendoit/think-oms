@@ -5,7 +5,7 @@ import com.google.common.collect.Maps;
 import com.think.oms.domain.model.constant.OrderSource;
 import com.think.oms.domain.model.dp.OrderId;
 import com.think.oms.domain.pl.SkuItemInfo;
-import com.think.oms.domain.pl.command.OrderFulfillCommand;
+import com.think.oms.domain.pl.command.SkuShippingCommand;
 import lombok.Getter;
 import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
@@ -26,7 +26,7 @@ public class ShippingCallbackAggregate {
 
     private ShippingCallbackRecord shippingCallbackRecord;
 
-    public static ShippingCallbackAggregate create(OrderFulfillCommand command){
+    public static ShippingCallbackAggregate create(SkuShippingCommand command){
         command.validate();
         ShippingCallbackAggregate aggregate = new ShippingCallbackAggregate();
         aggregate.orderId = new OrderId(command.getOrderNo());
