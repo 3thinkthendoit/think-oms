@@ -3,9 +3,9 @@ server:
 spring:
   datasource:
     driver-class-name: com.mysql.jdbc.Driver
-    url: jdbc:mysql://dev-db.viomi.net:3306/vm_report?characterEncoding=UTF-8&autoReconnect=true&autoReconnectForPools=true&useUnicode=true&zeroDateTimeBehavior=convertToNull&allowMultiQueries=true&useSSL=false
-    username: viomi
-    password: dN3E6@(n3F6*23hwdP
+    url: jdbc:mysql://localhost:3306/think-oms?characterEncoding=UTF-8&autoReconnect=true&autoReconnectForPools=true&useUnicode=true&zeroDateTimeBehavior=convertToNull&allowMultiQueries=true&useSSL=false
+    username: root
+    password: d*sN3n3F6*23hwdP
     druid:
       type: com.alibaba.druid.pool.DruidDataSource
       initial-size: 20

@@ -4,16 +4,17 @@ left to right direction
 
 (订单履约) as (FulfillOrder)
 (订单拆单) as splitOrder
+(订单分仓) as dispatch
 MQ --> (FulfillOrder)
 
 FulfillOrder --> splitOrder
-FulfillOrder -->(订单分仓)
+FulfillOrder -->dispatch
 FulfillOrder -->(通知仓库发货)
 
-splitOrder ..> (位置就近原则)
-splitOrder ..> (库存充足优先原则)
-splitOrder ..> (成本最优原则)
-splitOrder ..> (商品属性原则)
-splitOrder ..> (订单优先级原则)
-splitOrder ..> (仓库处理能力原则)
+dispatch ..> (位置就近原则)
+dispatch ..> (库存充足优先原则)
+dispatch ..> (成本最优原则)
+dispatch ..> (商品属性原则)
+dispatch ..> (订单优先级原则)
+dispatch ..> (仓库处理能力原则)
 @enduml
