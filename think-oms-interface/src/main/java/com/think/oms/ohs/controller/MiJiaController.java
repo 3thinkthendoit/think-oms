@@ -1,8 +1,8 @@
 package com.think.oms.ohs.controller;
 
 import com.google.common.collect.Maps;
-import com.think.oms.app.service.OrderAppService;
 import com.think.oms.domain.pl.command.OrderCreateCommand;
+import com.think.oms.local.OrderLocalService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,7 +18,7 @@ public class MiJiaController {
 
 
     @Autowired
-    OrderAppService orderAppService;
+    OrderLocalService orderLocalService;
 
     /**
      * 接受米家订单(小米主动推送)
@@ -29,7 +29,7 @@ public class MiJiaController {
         //解析米家协议 转成 CreateOrderCommand
         OrderCreateCommand command = OrderCreateCommand.builder()
                 .build();
-        orderAppService.createOrder(command);
+        orderLocalService.createOrder(command);
         return Maps.newHashMap();
     }
 

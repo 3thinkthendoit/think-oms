@@ -1,7 +1,7 @@
 package com.think.oms.ohs.listener;
 
-import com.think.oms.app.service.OrderAppService;
 import com.think.oms.domain.pl.event.OrderFulfillEvent;
+import com.think.oms.local.OrderLocalService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.EventListener;
@@ -16,14 +16,15 @@ import org.springframework.stereotype.Component;
 public class OrderFulfilledListener {
 
     @Autowired
-    OrderAppService orderAppService;
+    OrderLocalService orderLocalService;
+
 
     @EventListener(value = OrderFulfillEvent.class)
     @Async
     public void onApplicationEvent(OrderFulfillEvent event) {
         log.info("OrderFulfilledEvent :orderNo=[{}]",event.getOrderNo());
         try {
-            orderAppService.fulfillOrder(event.getOrderNo());
+            orderLocalService.fulfillOrder(event.getOrderNo());
         }catch (Exception ex){
             log.error(ex.getMessage(),ex);
         }

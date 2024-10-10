@@ -1,7 +1,7 @@
 package com.think.oms.ohs.listener;
 
-import com.think.oms.app.service.OrderAppService;
 import com.think.oms.domain.pl.event.OrderCreatedEvent;
+import com.think.oms.local.OrderLocalService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.EventListener;
@@ -16,14 +16,14 @@ import org.springframework.stereotype.Component;
 public class OrderCreatedListener  {
 
     @Autowired
-    OrderAppService orderAppService;
+    OrderLocalService orderLocalService;
 
     @EventListener(value = OrderCreatedEvent.class)
     @Async
     public void onApplicationEvent(OrderCreatedEvent event) {
         log.info("收到OrderCreatedEvent :orderNo=[{}]",event.getOrderNo());
         try {
-            orderAppService.dispatchOrder(event.getOrderNo());
+            orderLocalService.dispatchOrder(event.getOrderNo());
         }catch (Exception ex){
             log.error(ex.getMessage(),ex);
         }

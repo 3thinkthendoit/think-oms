@@ -1,8 +1,8 @@
 package com.think.oms.ohs.job;
 
-import com.think.oms.app.service.OrderAppService;
 import com.think.oms.domain.pl.command.OrderCreateCommand;
 import com.think.oms.infrastructure.acl.api.taobao.TaoBaoClient;
+import com.think.oms.local.OrderLocalService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -14,7 +14,7 @@ import java.util.Date;
 public class TaoBaoOrderTask {
 
     @Autowired
-    OrderAppService orderAppService;
+    OrderLocalService orderLocalService;
     @Autowired
     TaoBaoClient taoBaoClient;
 
@@ -27,6 +27,6 @@ public class TaoBaoOrderTask {
         calendar.add(Calendar.DAY_OF_MONTH, -1);
         Date begin = new Date();
         OrderCreateCommand command = taoBaoClient.pullOrder(begin,end);
-        orderAppService.createOrder(command);
+        orderLocalService.createOrder(command);
     }
 }
