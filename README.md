@@ -72,7 +72,8 @@
 
 ### DDD分层代码调用时序图(订单接入)
 
-![企业微信截图_17237995107136](https://github.com/user-attachments/assets/a7a5eb7c-4848-42b6-a399-8bdcc6d39336)
+![企业微信截图_17285469661453](https://github.com/user-attachments/assets/f85beae6-c142-453e-a927-f8eee30bdb87)
+
 
 
 
