@@ -5,11 +5,12 @@ participant "Port[Gateway/Repository]适配器" as Port
 
 box 接口层(北向网关OSH)
 participant "Job/Rpc/Mq/Listener"
+participant LocalService
 end box
 box 应用层(App)
 participant ApplicationService
 end box
-box 领域层(Domain) #EEEBDC
+box 领域层(Domain) #FFFF99
 participant Aggregate
 participant DomainService
 participant Port
@@ -21,7 +22,8 @@ participant OrderRepositoryImpl
 participant InventoryGatewayImpl
 end box
 
-"Job/Rpc/Mq/Listener" -> ApplicationService: 电商平台协议转OrderCreateCommand
+"Job/Rpc/Mq/Listener" -> LocalService
+LocalService -> ApplicationService:平台协议转CreateCommand
 activate ApplicationService
 ApplicationService -> Aggregate:创建订单聚合
 activate Aggregate
